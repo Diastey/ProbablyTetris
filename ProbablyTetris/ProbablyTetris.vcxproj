@@ -128,7 +128,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="DirectXManager.cpp" />
+    <ClCompile Include="FrameTimer.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameWindowManager.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="DirectXManager.h" />
+    <ClInclude Include="FrameTimer.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameWindowManager.h" />
+    <ClInclude Include="InputManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
