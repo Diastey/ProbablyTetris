@@ -18,7 +18,7 @@ InputManager* inputManager;
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	windowManager = new GameWindowManager(hInstance, 1024, 640, "ProbablyTetris", "PBYTS");
+	windowManager = new GameWindowManager(hInstance, 1024, 650, "ProbablyTetris");
 	windowManager->InitializeWindow();
 
 	directXManager = new DirectXManager();
@@ -27,6 +27,7 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 		return 0;
 	}
 
+	inputManager = new InputManager();
 	if (!inputManager->CreateInputDevice(windowManager->GetHWND(), windowManager->GetWindowWidth(), windowManager->GetWindowHeight()))
 	{
 		return 0;
@@ -34,7 +35,13 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 
 	while (windowManager->IsRunning())
 	{
-		//std::cout << "Running" << std::endl;
+		inputManager->GetInput();
+
+		if (inputManager->IsKeyPressed(DIK_ESCAPE))
+		{
+			std::cout << "QUIT" << std::endl;
+			PostQuitMessage(0);
+		}
 	}
 
 	inputManager->ReleaseInputDevice();

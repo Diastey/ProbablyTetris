@@ -6,30 +6,31 @@ DirectXManager::DirectXManager()
 
 DirectXManager::~DirectXManager()
 {
+	ReleaseRender();
 }
 
 bool DirectXManager::CreateDirectX(HWND hWnd, int backBufferWidth, int backBufferHeight)
 {
 	HRESULT hr = NULL;
-	direct3D9 = Direct3DCreate9(D3D_SDK_VERSION);
+	m_direct3D9 = Direct3DCreate9(D3D_SDK_VERSION);
 
-	ZeroMemory(&d3dPP, sizeof(d3dPP));
+	ZeroMemory(&m_d3dPP, sizeof(m_d3dPP));
 
-	d3dPP.Windowed = true;
-	d3dPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dPP.BackBufferFormat = D3DFMT_X8R8G8B8;
-	d3dPP.BackBufferCount = 1;
-	d3dPP.BackBufferWidth = backBufferWidth;
-	d3dPP.BackBufferHeight = backBufferHeight;
-	d3dPP.hDeviceWindow = hWnd;
+	m_d3dPP.Windowed = true;
+	m_d3dPP.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	m_d3dPP.BackBufferFormat = D3DFMT_X8R8G8B8;
+	m_d3dPP.BackBufferCount = 1;
+	m_d3dPP.BackBufferWidth = backBufferWidth;
+	m_d3dPP.BackBufferHeight = backBufferHeight;
+	m_d3dPP.hDeviceWindow = hWnd;
 
-	hr = direct3D9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dPP, &d3dDevice);
-	if (FAILED(hr)) 
+	hr = m_direct3D9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3dPP, &m_d3dDevice);
+	if (FAILED(hr))
 	{
 		return false;
 	}
-	hr = D3DXCreateSprite(d3dDevice, &spriteBrush);
-	if (FALSE(hr)) 
+	hr = D3DXCreateSprite(m_d3dDevice, &m_spriteBrush);
+	if (FALSE(hr))
 	{
 		return false;
 	}
@@ -39,42 +40,42 @@ bool DirectXManager::CreateDirectX(HWND hWnd, int backBufferWidth, int backBuffe
 
 void DirectXManager::BeginRender()
 {
-	d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	d3dDevice->BeginScene();
-	spriteBrush->Begin(D3DXSPRITE_ALPHABLEND);
+	m_d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	m_d3dDevice->BeginScene();
+	m_spriteBrush->Begin(D3DXSPRITE_ALPHABLEND);
 }
 
 void DirectXManager::EndRender()
 {
-	spriteBrush->End();
-	d3dDevice->EndScene();
+	m_spriteBrush->End();
+	m_d3dDevice->EndScene();
 
-	d3dDevice->Present(NULL, NULL, NULL, NULL);
+	m_d3dDevice->Present(NULL, NULL, NULL, NULL);
 }
 
 void DirectXManager::ReleaseRender()
 {
-	spriteBrush->Release();
-	spriteBrush = NULL;
+	m_spriteBrush->Release();
+	m_spriteBrush = NULL;
 
-	d3dDevice->Release();
-	d3dDevice = NULL;
+	m_d3dDevice->Release();
+	m_d3dDevice = NULL;
 
-	direct3D9->Release();
-	direct3D9 = NULL;
+	m_direct3D9->Release();
+	m_direct3D9 = NULL;
 }
 
 LPD3DXSPRITE DirectXManager::GetSpriteBrush()
 {
-	return spriteBrush;
+	return m_spriteBrush;
 }
 
 IDirect3DDevice9* DirectXManager::GetD3dDevice()
 {
-	return d3dDevice;
+	return m_d3dDevice;
 }
 
 D3DPRESENT_PARAMETERS DirectXManager::GetD3dPP()
 {
-	return d3dPP;
+	return m_d3dPP;
 }

@@ -11,14 +11,12 @@ LRESULT CALLBACK MainWindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return GameWindowPTR::globalPtr->WindowProcedure(hWnd, message, wParam, lParam);
 }
 
-GameWindowManager::GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title, std::string className)
+GameWindowManager::GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title)
 	:hInstance(hInstance)
 	, windowWidth(width)
 	, windowHeight(height)
-	, windowTitle(title.c_str())
-	, windowClassName(className.c_str())
+	, windowTitle(title)
 {
-	//Constructor
 }
 
 GameWindowManager::~GameWindowManager()
@@ -33,13 +31,13 @@ void GameWindowManager::InitializeWindow()
 	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wndClass.hInstance = hInstance;
 	wndClass.lpfnWndProc = MainWindowProcedure;
-	wndClass.lpszClassName = windowClassName;
+	wndClass.lpszClassName = "CPPPROJECT";
 	wndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&wndClass);
-	g_hWnd = CreateWindowEx(0, wndClass.lpszClassName, windowTitle, WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN) / 2 - windowWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - windowHeight / 2, windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+	g_hWnd = CreateWindowEx(0, wndClass.lpszClassName, windowTitle.c_str(), WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN) / 2 - windowWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - windowHeight / 2, windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
 
 	ShowWindow(g_hWnd, 1);
-	ShowCursor(false);
+	ShowCursor(true);
 	ZeroMemory(&msg, sizeof(msg));
 }
 

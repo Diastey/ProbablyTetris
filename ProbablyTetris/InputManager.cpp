@@ -11,27 +11,27 @@ InputManager::~InputManager()
 bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBufferHeight)
 {
 	HRESULT hr = NULL;
-	hr = DirectInput8Create(GetModuleHandle(NULL), 0x0800, IID_IDirectInput8, (void**)&dInput, NULL);
+	hr = DirectInput8Create(GetModuleHandle(NULL), 0x0800, IID_IDirectInput8, (void**)&m_dInput, NULL);
 	if (FALSE(hr)) 
 	{
 		return false;
 	}
 
-	hr = dInput->CreateDevice(GUID_SysKeyboard, &dInputKeyboardDevice, NULL);
+	hr = m_dInput->CreateDevice(GUID_SysKeyboard, &m_dInputKeyboardDevice, NULL);
 	if (FALSE(hr)) 
 	{
 		return false;
 	}
-	dInputKeyboardDevice->SetDataFormat(&c_dfDIKeyboard);
+	m_dInputKeyboardDevice->SetDataFormat(&c_dfDIKeyboard);
 
-	dInputKeyboardDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-	hr = dInput->CreateDevice(GUID_SysMouse, &dInputMouseDevice, NULL);
+	m_dInputKeyboardDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	hr = m_dInput->CreateDevice(GUID_SysMouse, &m_dInputMouseDevice, NULL);
 	if (FALSE(hr))
 	{
 		return false;
 	}
-	dInputMouseDevice->SetDataFormat(&c_dfDIMouse);
-	dInputMouseDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	m_dInputMouseDevice->SetDataFormat(&c_dfDIMouse);
+	m_dInputMouseDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
 	currentXpos = backBufferWidth / 2;
 	currentYpos = backBufferHeight / 2;
@@ -41,40 +41,40 @@ bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBuf
 
 void InputManager::GetInput()
 {
-	mouseUp[0] = false;
-	mouseUp[1] = false;
-	dInputKeyboardDevice->Acquire();
-	dInputMouseDevice->Acquire();
-	dInputKeyboardDevice->GetDeviceState(256, diKeys);
-	dInputMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);
+	m_mouseUp[0] = false;
+	m_mouseUp[1] = false;
+	m_dInputKeyboardDevice->Acquire();
+	m_dInputMouseDevice->Acquire();
+	m_dInputKeyboardDevice->GetDeviceState(256, m_diKeys);
+	m_dInputMouseDevice->GetDeviceState(sizeof(m_mouseState), &m_mouseState);
 
 	if (IsMouseDown(0))
 	{
-		mouseDown[0] = true;
+		m_mouseDown[0] = true;
 	}
-	else if (mouseDown[0])
+	else if (m_mouseDown[0])
 	{
-		mouseUp[0] = true;
-		mouseDown[0] = false;
+		m_mouseUp[0] = true;
+		m_mouseDown[0] = false;
 	}
 
 	if (IsMouseDown(1))
 	{
-		mouseDown[1] = true;
+		m_mouseDown[1] = true;
 	}
-	else if (mouseDown[1])
+	else if (m_mouseDown[1])
 	{
-		mouseUp[1] = true;
-		mouseDown[1] = false;
+		m_mouseUp[1] = true;
+		m_mouseDown[1] = false;
 	}
 
-	currentXpos += mouseState.lX;
-	currentYpos += mouseState.lY;
+	currentXpos += m_mouseState.lX;
+	currentYpos += m_mouseState.lY;
 }
 
 bool InputManager::IsKeyPressed(int key)
 {
-	if (diKeys[key] & 0x80) 
+	if (m_diKeys[key] & 0x80) 
 	{
 		return true;
 	}
@@ -86,7 +86,7 @@ bool InputManager::IsKeyPressed(int key)
 
 bool InputManager::IsMouseUp(int key)
 {
-	return mouseUp[key];
+	return m_mouseUp[key];
 }
 
 bool InputManager::IsMouseDown(int key)
@@ -96,19 +96,19 @@ bool InputManager::IsMouseDown(int key)
 
 void InputManager::ReleaseInputDevice()
 {
-	dInputMouseDevice->Unacquire();
-	dInputMouseDevice->Release();
-	dInputMouseDevice = NULL;
+	m_dInputMouseDevice->Unacquire();
+	m_dInputMouseDevice->Release();
+	m_dInputMouseDevice = NULL;
 
-	dInputKeyboardDevice->Unacquire();
-	dInputKeyboardDevice->Release();
-	dInputKeyboardDevice = NULL;
+	m_dInputKeyboardDevice->Unacquire();
+	m_dInputKeyboardDevice->Release();
+	m_dInputKeyboardDevice = NULL;
 
-	dInput->Release();
-	dInput = NULL;
+	m_dInput->Release();
+	m_dInput = NULL;
 }
 
 DIMOUSESTATE InputManager::GetMouseState()
 {
-	return mouseState;
+	return m_mouseState;
 }

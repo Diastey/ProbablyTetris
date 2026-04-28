@@ -3,27 +3,27 @@
 
 void FrameTimer::Init(int fps)
 {
-	QueryPerformanceFrequency(&timerFreq);
-	QueryPerformanceCounter(&timeNow);
-	QueryPerformanceCounter(&timePrevious);
+	QueryPerformanceFrequency(&m_timerFreq);
+	QueryPerformanceCounter(&m_timeNow);
+	QueryPerformanceCounter(&m_timePrevious);
 
-	requestedFps = fps;
+	m_requestedFps = fps;
 
-	intervalsPerFrame = (float)(timerFreq.QuadPart / requestedFps);
+	m_intervalsPerFrame = (float)(m_timerFreq.QuadPart / m_requestedFps);
 }
 
 int FrameTimer::FramesToUpdate()
 {
 	int framesToUpdate = 0;
 
-	QueryPerformanceCounter(&timeNow);
+	QueryPerformanceCounter(&m_timeNow);
 
-	deltaTime = timeNow.QuadPart - timePrevious.QuadPart;
+	m_deltaTime = m_timeNow.QuadPart - m_timePrevious.QuadPart;
 
-	framesToUpdate = (int)(deltaTime / intervalsPerFrame);
+	framesToUpdate = (int)(m_deltaTime / m_intervalsPerFrame);
 
 	if (framesToUpdate != 0) {
-		QueryPerformanceCounter(&timePrevious);
+		QueryPerformanceCounter(&m_timePrevious);
 	}
 
 	return framesToUpdate;

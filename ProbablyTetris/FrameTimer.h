@@ -3,16 +3,15 @@
 
 class FrameTimer
 {
+	LARGE_INTEGER m_timerFreq;
+	LARGE_INTEGER m_timeNow;
+	LARGE_INTEGER m_timePrevious;
+
+	int m_requestedFps;
+	float m_intervalsPerFrame;
+	float m_deltaTime;
+
 public:
 	void Init(int fps);
 	int FramesToUpdate();
-
-private:
-	LARGE_INTEGER timerFreq;
-	LARGE_INTEGER timeNow;
-	LARGE_INTEGER timePrevious;
-
-	int requestedFps;
-	float intervalsPerFrame;
-	float deltaTime;
 };

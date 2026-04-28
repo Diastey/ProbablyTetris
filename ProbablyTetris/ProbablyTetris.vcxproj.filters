@@ -19,21 +19,30 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{9b8a33c8-32bf-4a48-a4b6-72df2bcb74af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Objects">
-      <UniqueIdentifier>{d3ff286a-1186-4c34-80f0-27c221c03582}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{795413bd-5a65-41d5-bdc2-7643982587da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Scenes">
       <UniqueIdentifier>{bc798dc6-51f1-4cfa-8a2a-5aa88672decf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{b9593717-b198-4850-acd1-3e10035385ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{795413bd-5a65-41d5-bdc2-7643982587da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Component">
+      <UniqueIdentifier>{d3ff286a-1186-4c34-80f0-27c221c03582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Templates">
+      <UniqueIdentifier>{daf76e27-1a33-41cd-9822-45e4ade1ee5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{599c7fc7-faa7-4c85-8c9f-58a30a0eb9f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{0e9a3232-e648-44b2-9eb2-3aeeed2ae06a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="GameMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectXManager.cpp">
@@ -48,11 +57,11 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="BaseScene.cpp">
       <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +77,20 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="BaseScene.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

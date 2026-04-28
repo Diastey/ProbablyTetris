@@ -9,13 +9,12 @@ protected:
 	HWND g_hWnd;
 	WNDCLASS wndClass;
 	MSG msg;
-	LPCSTR windowTitle;
-	LPCSTR windowClassName;
+	const std::string windowTitle;
 	int windowWidth;
 	int windowHeight;
 
 public:
-	GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title, std::string className);
+	GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title);
 	~GameWindowManager();
 
 	void InitializeWindow();

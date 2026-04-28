@@ -4,13 +4,13 @@
 class InputManager
 {
 protected:
-	LPDIRECTINPUT8 dInput;
-	LPDIRECTINPUTDEVICE8 dInputKeyboardDevice;
-	LPDIRECTINPUTDEVICE8 dInputMouseDevice;
-	BYTE diKeys[256];
-	DIMOUSESTATE mouseState;
-	bool mouseDown[2];
-	bool mouseUp[2];
+	LPDIRECTINPUT8 m_dInput;
+	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice;
+	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice;
+	BYTE m_diKeys[256];
+	DIMOUSESTATE m_mouseState;
+	bool m_mouseDown[2];
+	bool m_mouseUp[2];
 
 public:
 	LONG currentXpos;
