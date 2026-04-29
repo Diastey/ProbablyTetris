@@ -4,14 +4,13 @@
 
 class GameWindowManager
 {
-protected:
-	HINSTANCE hInstance;
-	HWND g_hWnd;
-	WNDCLASS wndClass;
-	MSG msg;
-	const std::string windowTitle;
-	int windowWidth;
-	int windowHeight;
+	HINSTANCE m_hInstance;
+	HWND m_hWnd;
+	WNDCLASS m_wndClass;
+	MSG m_msg;
+	const std::string m_windowTitle;
+	int m_windowWidth;
+	int m_windowHeight;
 
 public:
 	GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title);

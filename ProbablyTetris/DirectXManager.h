@@ -4,7 +4,6 @@
 
 class DirectXManager
 {
-protected:
 	IDirect3D9* m_direct3D9;
 	IDirect3DDevice9* m_d3dDevice;
 	D3DPRESENT_PARAMETERS m_d3dPP;

@@ -3,7 +3,6 @@
 
 class InputManager
 {
-protected:
 	LPDIRECTINPUT8 m_dInput;
 	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice;
 	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice;

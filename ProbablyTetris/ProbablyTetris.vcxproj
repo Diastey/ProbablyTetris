@@ -134,6 +134,7 @@
     <ClCompile Include="GameWindowManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameMain.cpp" />
+    <ClCompile Include="SceneStackManager.cpp" />
     <ClCompile Include="Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,10 +142,11 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="DirectXManager.h" />
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameWindowManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="SceneStackManager.h" />
     <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

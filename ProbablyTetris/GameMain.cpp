@@ -7,6 +7,7 @@
 #include "GameWindowManager.h"
 #include "DirectXManager.h"
 #include "InputManager.h"
+#include "SceneStackManager.h"
 
 #include <iostream>
 
@@ -14,6 +15,7 @@
 GameWindowManager* windowManager;
 DirectXManager* directXManager;
 InputManager* inputManager;
+SceneStackManager* sceneStack = new SceneStackManager();
 
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
@@ -35,7 +37,10 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 
 	while (windowManager->IsRunning())
 	{
-		inputManager->GetInput();
+		if (!sceneStack->IsEmpty())
+		{
+			sceneStack->RunCurrentScene();
+		}
 
 		if (inputManager->IsKeyPressed(DIK_ESCAPE))
 		{

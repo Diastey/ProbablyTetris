@@ -63,6 +63,9 @@
     <ClCompile Include="Vec2.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="SceneStackManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWindowManager.h">
@@ -80,7 +83,7 @@
     <ClInclude Include="BaseScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="GameObject.h">
       <Filter>Header Files\Templates</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="Vec2.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneStackManager.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

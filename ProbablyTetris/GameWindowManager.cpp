@@ -12,10 +12,10 @@ LRESULT CALLBACK MainWindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPA
 }
 
 GameWindowManager::GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title)
-	:hInstance(hInstance)
-	, windowWidth(width)
-	, windowHeight(height)
-	, windowTitle(title)
+	:m_hInstance(hInstance)
+	, m_windowWidth(width)
+	, m_windowHeight(height)
+	, m_windowTitle(title)
 {
 }
 
@@ -26,19 +26,19 @@ GameWindowManager::~GameWindowManager()
 
 void GameWindowManager::InitializeWindow()
 {
-	ZeroMemory(&wndClass, sizeof(wndClass));
-	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndClass.hInstance = hInstance;
-	wndClass.lpfnWndProc = MainWindowProcedure;
-	wndClass.lpszClassName = "CPPPROJECT";
-	wndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&wndClass);
-	g_hWnd = CreateWindowEx(0, wndClass.lpszClassName, windowTitle.c_str(), WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN) / 2 - windowWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - windowHeight / 2, windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
+	ZeroMemory(&m_wndClass, sizeof(m_wndClass));
+	m_wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	m_wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	m_wndClass.hInstance = m_hInstance;
+	m_wndClass.lpfnWndProc = MainWindowProcedure;
+	m_wndClass.lpszClassName = "CPPPROJECT";
+	m_wndClass.style = CS_HREDRAW | CS_VREDRAW;
+	RegisterClass(&m_wndClass);
+	m_hWnd = CreateWindowEx(0, m_wndClass.lpszClassName, m_windowTitle.c_str(), WS_OVERLAPPEDWINDOW, GetSystemMetrics(SM_CXSCREEN) / 2 - m_windowWidth / 2, GetSystemMetrics(SM_CYSCREEN) / 2 - m_windowHeight / 2, m_windowWidth, m_windowHeight, NULL, NULL, m_hInstance, NULL);
 
-	ShowWindow(g_hWnd, 1);
+	ShowWindow(m_hWnd, 1);
 	ShowCursor(true);
-	ZeroMemory(&msg, sizeof(msg));
+	ZeroMemory(&m_msg, sizeof(m_msg));
 }
 
 LRESULT GameWindowManager::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -56,16 +56,16 @@ LRESULT GameWindowManager::WindowProcedure(HWND hWnd, UINT message, WPARAM wPara
 
 bool GameWindowManager::IsRunning()
 {
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	if (PeekMessage(&m_msg, NULL, 0, 0, PM_REMOVE))
 	{
-		if (msg.message == WM_QUIT)
+		if (m_msg.message == WM_QUIT)
 		{
 			return false;
 		}
 		else
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			TranslateMessage(&m_msg);
+			DispatchMessage(&m_msg);
 		}
 	}
 	return true;
@@ -73,20 +73,20 @@ bool GameWindowManager::IsRunning()
 
 HWND GameWindowManager::GetHWND()
 {
-	return g_hWnd;
+	return m_hWnd;
 }
 
 int GameWindowManager::GetWindowWidth()
 {
-	return windowWidth;
+	return m_windowWidth;
 }
 
 int GameWindowManager::GetWindowHeight()
 {
-	return windowHeight;
+	return m_windowHeight;
 }
 
 void GameWindowManager::Cleanup()
 {
-	UnregisterClass(wndClass.lpszClassName, GetModuleHandle(NULL));
+	UnregisterClass(m_wndClass.lpszClassName, GetModuleHandle(NULL));
 }
