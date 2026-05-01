@@ -2,6 +2,7 @@
 #include <tuple>
 
 #include "CTransform.h"
+#include "CSprite.h"
 
 enum Tag
 {
@@ -10,7 +11,8 @@ enum Tag
 
 using ComponentTuple = std::tuple
 <
-	CTransform
+	CTransform,
+	CSprite
 >;
 
 class GameObject

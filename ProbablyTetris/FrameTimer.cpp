@@ -1,6 +1,11 @@
 #include "FrameTimer.h"
 #include <profileapi.h>
 
+FrameTimer::FrameTimer(int fps)
+{
+	Init(fps);
+}
+
 void FrameTimer::Init(int fps)
 {
 	QueryPerformanceFrequency(&m_timerFreq);

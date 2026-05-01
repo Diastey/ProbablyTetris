@@ -1,11 +1,16 @@
 #pragma once
 #include "Component.h"
-#include "Vec2.h"
+#include <d3dx9.h>
+#include <d3dx9math.h>
 
 class CTransform : public Component
 {
 public:
-	Vec2 pos = { 0,0 };
-	CTransform() {}
-	CTransform(const Vec2& p) :pos(p) {}
+	D3DXVECTOR2 scaling;
+	float rotation;
+	D3DXVECTOR2 position;
+
+public:
+	CTransform();
+	CTransform(D3DXVECTOR2 scaling, float rotation, D3DXVECTOR2 position);
 };

@@ -1,9 +1,5 @@
 #include "SceneStackManager.h"
 
-SceneStackManager::SceneStackManager()
-{
-}
-
 SceneStackManager::~SceneStackManager()
 {
 	CloseGame();
@@ -46,11 +42,10 @@ void SceneStackManager::UpdateSceneStack(SceneUpdateResult result)
 
 void SceneStackManager::CloseGame()
 {
-	if (!sceneStack.empty())
+	while (!sceneStack.empty())
 	{
 		sceneStack.top()->Release();
 		sceneStack.pop();
-		CloseGame();
 	}
 }
 bool SceneStackManager::IsEmpty()

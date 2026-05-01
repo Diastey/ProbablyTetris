@@ -9,50 +9,54 @@
 #include "InputManager.h"
 #include "SceneStackManager.h"
 
+#include "MainScene.h"
+
 #include <iostream>
 
 // HEAP
-GameWindowManager* windowManager;
-DirectXManager* directXManager;
-InputManager* inputManager;
-SceneStackManager* sceneStack = new SceneStackManager();
+GameWindowManager* GameWindowManager::instance = nullptr;
+DirectXManager* DirectXManager::instance = nullptr;
+InputManager* InputManager::instance = nullptr;
+SceneStackManager* SceneStackManager::instance = nullptr;
 
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	windowManager = new GameWindowManager(hInstance, 1024, 650, "ProbablyTetris");
-	windowManager->InitializeWindow();
+	GameWindowManager::GetInstance()->InitializeWindow(hInstance, 1024, 650, "ProbablyTetris");
 
-	directXManager = new DirectXManager();
-	if (!directXManager->CreateDirectX(windowManager->GetHWND(), windowManager->GetWindowWidth(), windowManager->GetWindowHeight()))
+	if (!DirectXManager::GetInstance()->CreateDirectX(GameWindowManager::GetInstance()->GetHWND(), GameWindowManager::GetInstance()->GetWindowWidth(), GameWindowManager::GetInstance()->GetWindowHeight()))
 	{
+		std::cout << "DirectX create failed" << std::endl;
 		return 0;
 	}
 
-	inputManager = new InputManager();
-	if (!inputManager->CreateInputDevice(windowManager->GetHWND(), windowManager->GetWindowWidth(), windowManager->GetWindowHeight()))
+	if (!InputManager::GetInstance()->CreateInputDevice(GameWindowManager::GetInstance()->GetHWND(), GameWindowManager::GetInstance()->GetWindowWidth(), GameWindowManager::GetInstance()->GetWindowHeight()))
 	{
+		std::cout << "Input device create failed" << std::endl;
 		return 0;
 	}
 
-	while (windowManager->IsRunning())
+	MainScene* mainScene = new MainScene(60);
+	SceneStackManager::GetInstance()->PushScene(mainScene);
+
+	while (GameWindowManager::GetInstance()->IsRunning())
 	{
-		if (!sceneStack->IsEmpty())
+		if (!SceneStackManager::GetInstance()->IsEmpty())
 		{
-			sceneStack->RunCurrentScene();
+			SceneStackManager::GetInstance()->RunCurrentScene();
 		}
 
-		if (inputManager->IsKeyPressed(DIK_ESCAPE))
+		if (InputManager::GetInstance()->IsKeyPressed(DIK_ESCAPE))
 		{
 			std::cout << "QUIT" << std::endl;
 			PostQuitMessage(0);
 		}
 	}
 
-	inputManager->ReleaseInputDevice();
-	directXManager->ReleaseRender();
+	InputManager::GetInstance()->ReleaseInputDevice();
+	DirectXManager::GetInstance()->ReleaseRender();
 
-	windowManager->Cleanup();
+	GameWindowManager::GetInstance()->Cleanup();
 
 	return 0;
 }

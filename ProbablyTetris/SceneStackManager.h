@@ -4,11 +4,22 @@
 
 class SceneStackManager
 {
+	static SceneStackManager* instance;
+
+	SceneStackManager() = default;
+	~SceneStackManager();
+
 	std::stack<BaseScene*> sceneStack;
 
 public:
-	SceneStackManager();
-	~SceneStackManager();
+	static SceneStackManager* GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			instance = new SceneStackManager();
+		}
+		return instance;
+	}
 
 	void PushScene(BaseScene* scene);
 	void PopScene();

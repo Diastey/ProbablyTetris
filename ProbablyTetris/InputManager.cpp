@@ -1,24 +1,16 @@
 #include "InputManager.h"
 
-InputManager::InputManager()
-{
-}
-
-InputManager::~InputManager()
-{
-}
-
 bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBufferHeight)
 {
 	HRESULT hr = NULL;
 	hr = DirectInput8Create(GetModuleHandle(NULL), 0x0800, IID_IDirectInput8, (void**)&m_dInput, NULL);
-	if (FALSE(hr)) 
+	if (FALSE(hr))
 	{
 		return false;
 	}
 
 	hr = m_dInput->CreateDevice(GUID_SysKeyboard, &m_dInputKeyboardDevice, NULL);
-	if (FALSE(hr)) 
+	if (FALSE(hr))
 	{
 		return false;
 	}
@@ -74,7 +66,7 @@ void InputManager::GetInput()
 
 bool InputManager::IsKeyPressed(int key)
 {
-	if (m_diKeys[key] & 0x80) 
+	if (m_diKeys[key] & 0x80)
 	{
 		return true;
 	}

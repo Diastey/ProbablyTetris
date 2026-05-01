@@ -4,14 +4,25 @@
 
 class DirectXManager
 {
+	static DirectXManager* instance;
+
+	DirectXManager() = default;
+	~DirectXManager() = default;
+
 	IDirect3D9* m_direct3D9;
 	IDirect3DDevice9* m_d3dDevice;
 	D3DPRESENT_PARAMETERS m_d3dPP;
 	LPD3DXSPRITE m_spriteBrush;
 
 public:
-	DirectXManager();
-	~DirectXManager();
+	static DirectXManager* GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			instance = new DirectXManager();
+		}
+		return instance;
+	}
 
 	bool CreateDirectX(HWND hWnd, int backBufferWidth, int backBufferHeight);
 	void BeginRender();

@@ -1,14 +1,5 @@
 #include "DirectXManager.h"
 
-DirectXManager::DirectXManager()
-{
-}
-
-DirectXManager::~DirectXManager()
-{
-	ReleaseRender();
-}
-
 bool DirectXManager::CreateDirectX(HWND hWnd, int backBufferWidth, int backBufferHeight)
 {
 	HRESULT hr = NULL;

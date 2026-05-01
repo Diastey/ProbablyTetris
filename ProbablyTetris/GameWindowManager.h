@@ -4,21 +4,33 @@
 
 class GameWindowManager
 {
+	static GameWindowManager* instance;
+
+	GameWindowManager() = default;
+	~GameWindowManager() = default;
+
 	HINSTANCE m_hInstance;
 	HWND m_hWnd;
 	WNDCLASS m_wndClass;
 	MSG m_msg;
-	const std::string m_windowTitle;
+	std::string m_windowTitle;
 	int m_windowWidth;
 	int m_windowHeight;
 
 public:
-	GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title);
-	~GameWindowManager();
+	static GameWindowManager* GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			instance = new GameWindowManager();
+		}
+		return instance;
+	}
 
-	void InitializeWindow();
+	void InitializeWindow(HINSTANCE hInstance, int width, int height, std::string title);
 	LRESULT WindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	bool IsRunning();
+	HINSTANCE GetHInstance();
 	HWND GetHWND();
 	int GetWindowWidth();
 	int GetWindowHeight();

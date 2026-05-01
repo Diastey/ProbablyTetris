@@ -129,13 +129,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="DirectXManager.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="GameWindowManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="GameMain.cpp" />
+    <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="SceneStackManager.cpp" />
-    <ClCompile Include="Vec2.cpp" />
+    <ClCompile Include="CSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
@@ -146,8 +148,9 @@
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameWindowManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="MainScene.h" />
     <ClInclude Include="SceneStackManager.h" />
-    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="CSprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,21 +11,13 @@ LRESULT CALLBACK MainWindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return GameWindowPTR::globalPtr->WindowProcedure(hWnd, message, wParam, lParam);
 }
 
-GameWindowManager::GameWindowManager(HINSTANCE hInstance, int width, int height, std::string title)
-	:m_hInstance(hInstance)
-	, m_windowWidth(width)
-	, m_windowHeight(height)
-	, m_windowTitle(title)
+void GameWindowManager::InitializeWindow(HINSTANCE hInstance, const int width, const int height, const std::string title)
 {
-}
+	m_hInstance = hInstance;
+	m_windowWidth = width;
+	m_windowHeight = height;
+	m_windowTitle = title;
 
-GameWindowManager::~GameWindowManager()
-{
-	Cleanup();
-}
-
-void GameWindowManager::InitializeWindow()
-{
 	ZeroMemory(&m_wndClass, sizeof(m_wndClass));
 	m_wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	m_wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -69,6 +61,11 @@ bool GameWindowManager::IsRunning()
 		}
 	}
 	return true;
+}
+
+HINSTANCE GameWindowManager::GetHInstance()
+{
+	return m_hInstance;
 }
 
 HWND GameWindowManager::GetHWND()

@@ -3,6 +3,11 @@
 
 class InputManager
 {
+	static InputManager* instance;
+
+	InputManager() = default;
+	~InputManager() = default;
+
 	LPDIRECTINPUT8 m_dInput;
 	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice;
 	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice;
@@ -16,8 +21,14 @@ public:
 	LONG currentYpos;
 
 public:
-	InputManager();
-	~InputManager();
+	static InputManager* GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			instance = new InputManager();
+		}
+		return instance;
+	}
 
 	bool CreateInputDevice(HWND hWnd, int backBufferWidth, int backBufferHeight);
 	void GetInput();

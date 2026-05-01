@@ -26,19 +26,14 @@ struct SceneUpdateResult
 
 class BaseScene
 {
-	int m_fps;
-	HINSTANCE m_hInstance;
-	GameWindowManager* m_window;
-	DirectXManager* m_directX;
-	InputManager* m_input;
-
+protected:
 	SceneUpdateResult result;
 	std::vector<GameObject> m_gameObjects;
 	FrameTimer* m_frameTimer;
-	int m_frames = 1;
+	int m_currentFrame = 1;
 
 public:
-	BaseScene(int fps, HINSTANCE hInstance, GameWindowManager* window, DirectXManager* directX, InputManager* input);
+	BaseScene(int fps);
 	virtual ~BaseScene() = default;
 
 	SceneUpdateResult Run();
@@ -46,8 +41,8 @@ public:
 	void AudioUpdate();
 	void UpdateCursorPosition(int cursorObjectIndex);
 
-	virtual void Release() = 0;
 	virtual bool Initialize() = 0;
 	virtual void Update(int frames) = 0;
 	virtual void Render() = 0;
+	virtual void Release() = 0;
 };
