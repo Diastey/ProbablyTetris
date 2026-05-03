@@ -3,6 +3,8 @@
 
 #include "CTransform.h"
 #include "CSprite.h"
+#include "CMatrixUnit.h"
+#include "CPieceUnit.h"
 
 enum Tag
 {
@@ -12,7 +14,8 @@ enum Tag
 using ComponentTuple = std::tuple
 <
 	CTransform,
-	CSprite
+	CSprite,
+	CMatrixUnit
 >;
 
 class GameObject
@@ -64,4 +67,9 @@ public:
 	bool IsAlive() const { return m_active; }
 	void Destroy() { m_active = false; }
 	const Tag& GetTag() const { return m_tag; }
+
+	void ReleaseObject()
+	{
+		Get<CSprite>().Release();
+	}
 };

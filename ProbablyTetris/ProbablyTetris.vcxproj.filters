@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{0e9a3232-e648-44b2-9eb2-3aeeed2ae06a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{b4b20aa0-6559-4900-984e-541bc2fcca1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{c177a1ee-c761-40ec-83bc-ee7d8c892ed3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameMain.cpp">
@@ -71,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="MainScene.cpp">
       <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="CMatrixUnit.cpp">
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CPieceUnit.cpp">
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixRow.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Tetriminos.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +124,24 @@
     </ClInclude>
     <ClInclude Include="MainScene.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="CMatrixUnit.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CPieceUnit.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorsUtil.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixRow.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetriminos.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TetriminosShapeUtil.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,11 +6,18 @@
 class CTransform : public Component
 {
 public:
-	D3DXVECTOR2 scaling;
-	float rotation;
-	D3DXVECTOR2 position;
+	D3DXVECTOR2 m_scaling;
+	float m_rotation;
+	D3DXVECTOR2 m_position;
 
 public:
-	CTransform();
-	CTransform(D3DXVECTOR2 scaling, float rotation, D3DXVECTOR2 position);
+	CTransform()
+		:m_scaling(D3DXVECTOR2(0, 0)),m_rotation(0),m_position(D3DXVECTOR2(0, 0))
+	{
+	}
+
+	CTransform(D3DXVECTOR2 scaling, float rotation, D3DXVECTOR2 position)
+		:m_scaling(scaling), m_rotation(rotation), m_position(position)
+	{
+	}
 };

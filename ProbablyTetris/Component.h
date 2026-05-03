@@ -5,5 +5,6 @@ class Component
 public:
 	bool exists = false;
 
-	virtual void Update() {};
+	virtual void Release() {}
+	virtual void Update() {}
 };

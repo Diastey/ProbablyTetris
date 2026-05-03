@@ -20,20 +20,23 @@ enum SceneCommand
 
 struct SceneUpdateResult
 {
-	SceneCommand command;
+	SceneCommand command = None;
 	BaseScene* nextScene = nullptr;
 };
 
 class BaseScene
 {
 protected:
-	SceneUpdateResult result;
+	SceneUpdateResult m_result;
 	std::vector<GameObject> m_gameObjects;
 	FrameTimer* m_frameTimer;
 	int m_currentFrame = 1;
 
 public:
-	BaseScene(int fps);
+	BaseScene(int fps)
+		:m_frameTimer(new FrameTimer(fps))
+	{
+	}
 	virtual ~BaseScene() = default;
 
 	SceneUpdateResult Run();

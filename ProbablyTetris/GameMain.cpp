@@ -22,7 +22,7 @@ SceneStackManager* SceneStackManager::instance = nullptr;
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	GameWindowManager::GetInstance()->InitializeWindow(hInstance, 1024, 650, "ProbablyTetris");
+	GameWindowManager::GetInstance()->InitializeWindow(hInstance, 1024, 800, "ProbablyTetris");
 
 	if (!DirectXManager::GetInstance()->CreateDirectX(GameWindowManager::GetInstance()->GetHWND(), GameWindowManager::GetInstance()->GetWindowWidth(), GameWindowManager::GetInstance()->GetWindowHeight()))
 	{

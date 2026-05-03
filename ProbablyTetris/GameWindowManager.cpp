@@ -1,6 +1,8 @@
 #pragma once
 #include "GameWindowManager.h"
 
+#include <iostream>
+
 namespace GameWindowPTR
 {
 	GameWindowManager* globalPtr;

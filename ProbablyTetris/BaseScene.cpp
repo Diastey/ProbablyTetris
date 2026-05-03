@@ -1,13 +1,8 @@
 #include "BaseScene.h"
 
-BaseScene::BaseScene(int fps)
-	:m_frameTimer(new FrameTimer(fps))
-{
-}
-
 SceneUpdateResult BaseScene::Run()
 {
-	result.command = None;
+	m_result.command = None;
 	Input();
 
 	Update(m_frameTimer->FramesToUpdate());
@@ -17,7 +12,7 @@ SceneUpdateResult BaseScene::Run()
 	DirectXManager::GetInstance()->EndRender();
 
 	AudioUpdate();
-	return result;
+	return m_result;
 }
 
 void BaseScene::Input()

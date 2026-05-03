@@ -12,7 +12,10 @@ class FrameTimer
 	float m_deltaTime;
 
 public:
-	FrameTimer(int fps);
+	FrameTimer(int fps)
+	{
+		Init(fps);
+	}
 
 	void Init(int fps);
 	int FramesToUpdate();

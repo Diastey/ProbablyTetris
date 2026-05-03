@@ -1,34 +1,11 @@
 #include "CSprite.h"
 
-CSprite::CSprite()
-{
-	texture = NULL;
-	height = 0;
-	width = 0;
-	rows = 0;
-	cols = 0;
-	maxFrame = 0;
-	rowToDraw = 0;
-}
-
-CSprite::CSprite(int height, int width)
-	:height(height), width(width), rows(1), cols(1), maxFrame(1), rowToDraw(0)
-{
-	texture = NULL;
-}
-
-CSprite::CSprite(int height, int width, int rows, int cols, int maxFrame, int rowToDraw)
-	:height(height), width(width), rows(rows), cols(cols), maxFrame(maxFrame), rowToDraw(rowToDraw)
-{
-	texture = NULL;
-}
-
 //Initialize the sprite by create texture based on texture file name
 bool CSprite::InitializeSprite(IDirect3DDevice9* d3dDevice, std::string fileName)
 {
 	HRESULT hr = NULL;
 
-	hr = D3DXCreateTextureFromFile(d3dDevice, fileName.c_str(), &texture);
+	hr = D3DXCreateTextureFromFile(d3dDevice, fileName.c_str(), &m_texture);
 	if (FALSE(hr)) {
 		return false;
 	}
@@ -40,7 +17,7 @@ bool CSprite::InitializeSpriteTransparent(IDirect3DDevice9* d3dDevice, std::stri
 {
 	HRESULT hr = NULL;
 
-	hr = D3DXCreateTextureFromFileEx(d3dDevice, fileName.c_str(), D3DX_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, NULL, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, D3DCOLOR_XRGB(r, g, b), NULL, NULL, &texture);
+	hr = D3DXCreateTextureFromFileEx(d3dDevice, fileName.c_str(), D3DX_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, NULL, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_DEFAULT, D3DCOLOR_XRGB(r, g, b), NULL, NULL, &m_texture);
 	if (FALSE(hr)) {
 		return false;
 	}
@@ -50,8 +27,8 @@ bool CSprite::InitializeSpriteTransparent(IDirect3DDevice9* d3dDevice, std::stri
 //Release the texture object
 void CSprite::ReleaseSprite()
 {
-	texture->Release();
-	texture = NULL;
+	m_texture->Release();
+	m_texture = NULL;
 }
 
 //Formula to calculate rectangle
@@ -60,9 +37,9 @@ RECT CSprite::CalcRect(const int frameCount)
 	RECT rect;
 
 	//Calculate the rectangle of the sprite based on different frame count changed in each frame
-	rect.top = (rowToDraw * SpriteHeight()) + (((frameCount % maxFrame) % rows) * SpriteHeight());
+	rect.top = (m_rowToDraw * SpriteHeight()) + (((frameCount % m_maxFrame) % m_rows) * SpriteHeight());
 	rect.bottom = rect.top + SpriteHeight();
-	rect.left = (SpriteWidth() * (frameCount % cols));
+	rect.left = (SpriteWidth() * (frameCount % m_cols));
 	rect.right = rect.left + SpriteWidth();
 
 	return rect;
@@ -85,13 +62,13 @@ RECT CSprite::CalcRectPosition(const D3DXVECTOR2& position)
 //Simple formula to get the height of sprite out of the spritesheet
 int CSprite::SpriteHeight()
 {
-	return  height / rows;
+	return  m_height / m_rows;
 }
 
 //Simple formula to get the width of sprite out of the spritesheet
 int CSprite::SpriteWidth()
 {
-	return width / cols;
+	return m_width / m_cols;
 }
 
 //Formula to get the center point of sprite
@@ -111,7 +88,7 @@ void CSprite::SetMatrixTransformation(LPD3DXSPRITE spriteBrush, const CTransform
 {
 	D3DXMATRIX matrix;
 	D3DXVECTOR2 spriteCenter = SpriteCenter();
-	D3DXMatrixTransformation2D(&matrix, NULL, 0.0, &transform.scaling, &spriteCenter, transform.rotation, &transform.position);
+	D3DXMatrixTransformation2D(&matrix, NULL, 0.0, &transform.m_scaling, &spriteCenter, transform.m_rotation, &transform.m_position);
 	spriteBrush->SetTransform(&matrix);
 }
 
@@ -120,7 +97,7 @@ void CSprite::DrawSprite(const int frameCount, LPD3DXSPRITE spriteBrush, const D
 {
 	RECT rect = CalcRect(frameCount);
 	D3DXVECTOR3 position3D(position.x, position.y, 0);
-	spriteBrush->Draw(texture, &rect, NULL, &position3D, D3DCOLOR_XRGB(r, g, b));
+	spriteBrush->Draw(m_texture, &rect, NULL, &position3D, D3DCOLOR_XRGB(r, g, b));
 }
 
 //Draw while setting transformation matrix
@@ -129,9 +106,9 @@ void CSprite::DrawSpriteWithMatrix(const int frameCount, LPD3DXSPRITE spriteBrus
 	D3DXMATRIX matrix;
 	RECT rect = CalcRect(frameCount);
 	D3DXVECTOR2 spriteCenter = SpriteCenter();
-	D3DXMatrixTransformation2D(&matrix, NULL, 0.0, &transform.scaling, &spriteCenter, transform.rotation, &transform.position);
+	D3DXMatrixTransformation2D(&matrix, NULL, 0.0, &transform.m_scaling, &spriteCenter, transform.m_rotation, &transform.m_position);
 	spriteBrush->SetTransform(&matrix);
-	spriteBrush->Draw(texture, &rect, NULL, NULL, D3DCOLOR_XRGB(r, g, b));
+	spriteBrush->Draw(m_texture, &rect, NULL, NULL, D3DCOLOR_XRGB(r, g, b));
 }
 
 void CSprite::Update()
