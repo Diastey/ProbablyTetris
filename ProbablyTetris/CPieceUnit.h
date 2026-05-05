@@ -7,6 +7,7 @@ class CPieceUnit :public Component
 	int m_xIndex;
 	int m_yIndex;
 	Colors m_color;
+	bool locked = false;
 
 public:
 	CPieceUnit()

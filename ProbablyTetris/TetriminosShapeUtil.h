@@ -1,15 +1,13 @@
 #pragma once
 #include "ColorsUtil.h"
-
-struct Vec2
-{
-	const int xIndex;
-	const int yIndex;
-};
+#include "MathUtil.h"
+#include <array>
 
 struct Tetrimino
 {
 	Vec2 pieces[4];
+	int pieceMatrixSize;
+	Vec2f pivotPoint;
 	Colors color;
 };
 
@@ -17,30 +15,34 @@ class TetriminoShapes
 {
 public:
 	static constexpr Tetrimino I = { {
-		{ -1, 0 }, { 0, 0 }, { 1, 0 }, { 2, 0 }
-	},PieceColors::Cyan };
+		{ -2, 0 }, { -1, 0 }, { 0, 0 }, { 1, 0 }
+	},4,{ -0.5, -0.5 },PieceColors::Cyan };
 
 	static constexpr Tetrimino J = { {
-		{ -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }
-	},PieceColors::Blue };
+		{ -1, 1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }
+	},3,{ 0, 0 },PieceColors::Blue };
 
 	static constexpr Tetrimino L = { {
 		{ -1, 0 }, { 0, 0 }, { 1, 0 }, { 1, 1 }
-	},PieceColors::Orange };
+	},3,{ 0, 0 },PieceColors::Orange };
 
 	static constexpr Tetrimino O = { {
-		{ 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }
-	},PieceColors::Yellow };
+		{ -1, 0 }, { 0, 0 }, { -1, -1 }, { 0, -1 }
+	},4,{ -0.5, -0.5 },PieceColors::Yellow };
 
 	static constexpr Tetrimino S = { {
-		{ 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }
-	},PieceColors::Green };
+		{ 0, 1 }, { 1, 1 }, { -1, 0 }, { 0, 0 }
+	},3,{ 0, 0 },PieceColors::Green };
 
 	static constexpr Tetrimino T = { {
-		{ -1, 0 }, { 0, 0 }, { 1, 0 }, { 0, 1 }
-	},PieceColors::Purple };
+		{ 0, 1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }
+	},3,{ 0, 0 },PieceColors::Purple };
 
 	static constexpr Tetrimino Z = { {
-		{ -1, 0 }, { 0, 0 }, { 0, 1 }, { 1, 1 }
-	},PieceColors::Red };
+		{ -1, 1 }, { 0, 1 }, { 0, 0 }, { 1, 0 }
+	},3,{ 0, 0 },PieceColors::Red };
+
+	static constexpr std::array<Tetrimino, 7> All = {
+		I, J, L, O, S, T, Z
+	};
 };

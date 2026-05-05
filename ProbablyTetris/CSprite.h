@@ -4,6 +4,7 @@
 #include <string>
 #include "Component.h"
 #include "CTransform.h"
+#include "ColorsUtil.h"
 
 class CSprite :public Component
 {
@@ -57,6 +58,8 @@ public:
 	//Set transformation matrix without actually drawing
 	void SetMatrixTransformation(LPD3DXSPRITE spriteBrush, const CTransform& transform);
 	//Simply draw sprite based on previous transformation matrix (If was set before drawing)
+	void DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b);
+	void DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const Colors& color);
 	void DrawSprite(const int frameCount, LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b);
 	//Draw while setting transformation matrix
 	void DrawSpriteWithMatrix(const int frameCount, LPD3DXSPRITE spriteBrush, const CTransform& transform, const int& r, const int& g, const int& b);

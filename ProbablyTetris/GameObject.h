@@ -15,7 +15,8 @@ using ComponentTuple = std::tuple
 <
 	CTransform,
 	CSprite,
-	CMatrixUnit
+	CMatrixUnit,
+	CPieceUnit
 >;
 
 class GameObject

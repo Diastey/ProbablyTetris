@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+void MainScene::SpawnNewPiece()
+{
+	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7]);
+}
+
 bool MainScene::Initialize()
 {
 	if (!m_matrixSprite.InitializeSprite(DirectXManager::GetInstance()->GetD3dDevice(), "Assets/Matrix.png"))
@@ -27,21 +32,53 @@ bool MainScene::Initialize()
 		m_theMatrix.push_back(newRow);
 	}
 
-	//m_tetriminos[0].Init(m_pieceSprite, TetriminoShapes::I);
-	//m_tetriminos[1].Init(m_pieceSprite, TetriminoShapes::J);
-	//m_tetriminos[2].Init(m_pieceSprite, TetriminoShapes::L);
-	//m_tetriminos[3].Init(m_pieceSprite, TetriminoShapes::O);
-	//m_tetriminos[4].Init(m_pieceSprite, TetriminoShapes::S);
-	//m_tetriminos[5].Init(m_pieceSprite, TetriminoShapes::T);
-	//m_tetriminos[6].Init(m_pieceSprite, TetriminoShapes::Z);
+	SpawnNewPiece();
 
 	return true;
 }
 
 void MainScene::Update(int frames)
 {
-	if (InputManager::GetInstance()->IsMouseDown(0))
+	if (currentTetrimino.IsLocked())
 	{
+		std::cout << "Locked" << std::endl;
+		return;
+	}
+
+	// Rotate counter clock-wise
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_Q))
+	{
+
+	}
+	// Rotate clock-wise
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_E))
+	{
+
+	}
+	// Mirror rotate
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_W))
+	{
+
+	}
+	// Move left
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_A))
+	{
+
+	}
+	// Move right
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_D))
+	{
+
+	}
+	// Move down
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_S))
+	{
+
+	}
+	// Drop
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_SPACE))
+	{
+		SpawnNewPiece();
 	}
 }
 
@@ -58,6 +95,11 @@ void MainScene::Render()
 		drawPosition.x = m_matrixStartX;
 		drawPosition.y += m_spriteSize;
 	}
+
+	currentTetrimino.DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize);
+
+	//std::cout << m_matrixStartX << " | " << m_matrixStartY << std::endl;
+	//m_tetriminos[5].DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize);
 
 	//for (int i = 0;i < 4;i++)
 	//{

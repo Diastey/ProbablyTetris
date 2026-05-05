@@ -143,5 +143,8 @@
     <ClInclude Include="TetriminosShapeUtil.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

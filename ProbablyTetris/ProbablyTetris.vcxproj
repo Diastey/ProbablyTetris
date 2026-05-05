@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="MathUtil.h" />
     <ClInclude Include="MatrixRow.h" />
     <ClInclude Include="CMatrixUnit.h" />
     <ClInclude Include="ColorsUtil.h" />
