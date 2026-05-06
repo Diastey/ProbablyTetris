@@ -1,10 +1,9 @@
 #include "MainScene.h"
 
-#include <iostream>
-
 void MainScene::SpawnNewPiece()
 {
-	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7]);
+	//currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7]);
+	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[0]);
 }
 
 bool MainScene::Initialize()
@@ -46,39 +45,69 @@ void MainScene::Update(int frames)
 	}
 
 	// Rotate counter clock-wise
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_Q))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_Q))
 	{
-
+		currentTetrimino.RotatePiece(CCW);
 	}
 	// Rotate clock-wise
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_E))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_E))
 	{
-
+		currentTetrimino.RotatePiece(CW);
 	}
 	// Mirror rotate
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_W))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_W))
 	{
-
-	}
-	// Move left
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_A))
-	{
-
-	}
-	// Move right
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_D))
-	{
-
+		currentTetrimino.DropPiece(1);
 	}
 	// Move down
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_S))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_S))
 	{
-
+		currentTetrimino.DropPiece(-1);
+	}
+	// Move left
+	if (InputManager::GetInstance()->IsKeyDown(DIK_A))
+	{
+		currentTetrimino.MovePiece(-1);
+	}
+	// Move right
+	if (InputManager::GetInstance()->IsKeyDown(DIK_D))
+	{
+		currentTetrimino.MovePiece(1);
 	}
 	// Drop
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_SPACE))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_SPACE))
 	{
 		SpawnNewPiece();
+	}
+
+	// Shape testings
+	if (InputManager::GetInstance()->IsKeyDown(DIK_1))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[0]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_2))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[1]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_3))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[2]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_4))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[3]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_5))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[4]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_6))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[5]);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_7))
+	{
+		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[6]);
 	}
 }
 
@@ -89,7 +118,7 @@ void MainScene::Render()
 	{
 		for (GameObject& obj : rows.GetUnits())
 		{
-			obj.Get<CSprite>().DrawSprite(m_currentFrame, DirectXManager::GetInstance()->GetSpriteBrush(), drawPosition, 155, 155, 155);
+			obj.Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), drawPosition);
 			drawPosition.x += m_spriteSize;
 		}
 		drawPosition.x = m_matrixStartX;

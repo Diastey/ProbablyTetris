@@ -15,27 +15,24 @@ class CSprite :public Component
 	int m_cols;
 	int m_maxFrame;
 	int m_rowToDraw;
+	Colors m_colors;
 
 public:
 	CSprite()
+		:m_texture(NULL), m_height(0), m_width(0), m_rows(0), m_cols(0), m_maxFrame(0), m_rowToDraw(0), m_colors({ 0,0,0 })
 	{
-		m_texture = NULL;
-		m_height = 0;
-		m_width = 0;
-		m_rows = 0;
-		m_cols = 0;
-		m_maxFrame = 0;
-		m_rowToDraw = 0;
 	}
 	CSprite(int height, int width)
-		:m_height(height), m_width(width), m_rows(1), m_cols(1), m_maxFrame(1), m_rowToDraw(0)
+		:m_texture(NULL), m_height(height), m_width(width), m_rows(1), m_cols(1), m_maxFrame(1), m_rowToDraw(0), m_colors({ 0,0,0 })
 	{
-		m_texture = NULL;
+	}
+	CSprite(int height, int width, Colors colors)
+		:m_texture(NULL), m_height(height), m_width(width), m_rows(1), m_cols(1), m_maxFrame(1), m_rowToDraw(0), m_colors(colors)
+	{
 	}
 	CSprite(int height, int width, int rows, int cols, int maxFrame, int rowToDraw)
-		:m_height(height), m_width(width), m_rows(rows), m_cols(cols), m_maxFrame(maxFrame), m_rowToDraw(rowToDraw)
+		:m_texture(NULL), m_height(height), m_width(width), m_rows(rows), m_cols(cols), m_maxFrame(maxFrame), m_rowToDraw(rowToDraw), m_colors({ 255,255,255 })
 	{
-		m_texture = NULL;
 	}
 
 	bool InitializeSprite(IDirect3DDevice9* d3dDevice, std::string fileName);
@@ -58,6 +55,7 @@ public:
 	//Set transformation matrix without actually drawing
 	void SetMatrixTransformation(LPD3DXSPRITE spriteBrush, const CTransform& transform);
 	//Simply draw sprite based on previous transformation matrix (If was set before drawing)
+	void DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position);
 	void DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b);
 	void DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const Colors& color);
 	void DrawSprite(const int frameCount, LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b);

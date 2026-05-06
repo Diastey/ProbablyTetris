@@ -11,7 +11,8 @@ class InputManager
 	LPDIRECTINPUT8 m_dInput;
 	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice;
 	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice;
-	BYTE m_diKeys[256];
+	BYTE m_previousKeyFlags[256];
+	BYTE m_currentKeyFlags[256];
 	DIMOUSESTATE m_mouseState;
 	bool m_mouseDown[2];
 	bool m_mouseUp[2];
@@ -35,6 +36,8 @@ public:
 	void ReleaseInputDevice();
 	DIMOUSESTATE GetMouseState();
 	bool IsKeyPressed(int key);
+	bool IsKeyDown(int key);
+	bool IsKeyUp(int key);
 	bool IsMouseUp(int key);
 	bool IsMouseDown(int key);
 };

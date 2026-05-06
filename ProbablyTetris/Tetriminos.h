@@ -3,7 +3,10 @@
 #include "GameObject.h"
 #include "TetriminosShapeUtil.h"
 #include "DirectXManager.h"
+#include "GameWindowManager.h"
 #include <array>
+
+#include <iostream>
 
 using TetrminoUnits = GameObject[4];
 enum CurrentDir
@@ -31,14 +34,20 @@ class Tetriminos
 	int m_currentXPos = 0;
 	int m_currentYPos = 0;
 
+	int m_minXIndex = 0;
+	int m_maxXIndex = 9;
+	int m_minYIndex = -21;
+	int m_maxYIndex = 0;
+
 public:
 	Tetriminos() = default;
 
 	void Init(CSprite sprite, Tetrimino tetrimino);
 	TetrminoUnits& GetPieces();
 	bool IsLocked();
-	bool RotatePiece(RotateDir rotateDirection);
-	bool MovePiece(int moveDirection);
-	bool DropPiece(int amount);
+	bool BoundaryCheck(int xIndex, int yIndex);
+	void RotatePiece(RotateDir rotateDirection);
+	void MovePiece(int moveDirection);
+	void DropPiece(int amount);
 	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
 };

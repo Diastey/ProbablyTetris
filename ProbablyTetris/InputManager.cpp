@@ -16,14 +16,14 @@ bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBuf
 	}
 	m_dInputKeyboardDevice->SetDataFormat(&c_dfDIKeyboard);
 
-	m_dInputKeyboardDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	m_dInputKeyboardDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	hr = m_dInput->CreateDevice(GUID_SysMouse, &m_dInputMouseDevice, NULL);
 	if (FALSE(hr))
 	{
 		return false;
 	}
 	m_dInputMouseDevice->SetDataFormat(&c_dfDIMouse);
-	m_dInputMouseDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	m_dInputMouseDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
 	currentXpos = backBufferWidth / 2;
 	currentYpos = backBufferHeight / 2;
@@ -33,11 +33,13 @@ bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBuf
 
 void InputManager::GetInput()
 {
+	memcpy(m_previousKeyFlags, m_currentKeyFlags, 256);
+
 	m_mouseUp[0] = false;
 	m_mouseUp[1] = false;
 	m_dInputKeyboardDevice->Acquire();
 	m_dInputMouseDevice->Acquire();
-	m_dInputKeyboardDevice->GetDeviceState(256, m_diKeys);
+	m_dInputKeyboardDevice->GetDeviceState(256, m_currentKeyFlags);
 	m_dInputMouseDevice->GetDeviceState(sizeof(m_mouseState), &m_mouseState);
 
 	if (IsMouseDown(0))
@@ -66,14 +68,18 @@ void InputManager::GetInput()
 
 bool InputManager::IsKeyPressed(int key)
 {
-	if (m_diKeys[key] & 0x80)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return (m_currentKeyFlags[key] & 0x80);
+}
+
+bool InputManager::IsKeyDown(int key)
+{
+	return (m_currentKeyFlags[key] & 0x80) && !(m_previousKeyFlags[key] & 0x80);
+}
+
+bool InputManager::IsKeyUp(int key)
+{
+
+	return !(m_currentKeyFlags[key] & 0x80) && (m_previousKeyFlags[key] & 0x80);
 }
 
 bool InputManager::IsMouseUp(int key)

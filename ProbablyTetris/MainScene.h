@@ -4,8 +4,9 @@
 #include "MatrixRow.h"
 #include "Tetriminos.h"
 #include "GameWindowManager.h"
-
 #include <cstdlib>
+
+#include <iostream>
 
 class MainScene :public BaseScene
 {
@@ -14,7 +15,7 @@ class MainScene :public BaseScene
 	const int m_matrixRows = 22;
 	const int m_matrixCols = 10;
 	const int m_spriteSize = 32;
-	CSprite m_matrixSprite = CSprite(m_spriteSize, m_spriteSize);
+	CSprite m_matrixSprite = CSprite(m_spriteSize, m_spriteSize, { 155,155,155 });
 	CSprite m_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
 	const int m_matrixStartX = ((GameWindowManager::GetInstance()->GetWindowWidth()) / 2) - ((m_spriteSize * m_matrixCols) / 2);
 	const int m_matrixStartY = ((GameWindowManager::GetInstance()->GetWindowHeight()) / 2) - ((m_spriteSize * m_matrixRows) / 2);

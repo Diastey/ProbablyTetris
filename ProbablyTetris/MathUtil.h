@@ -7,6 +7,6 @@ struct Vec2
 };
 struct Vec2f
 {
-	float xIndex;
-	float yIndex;
+	float x;
+	float y;
 };

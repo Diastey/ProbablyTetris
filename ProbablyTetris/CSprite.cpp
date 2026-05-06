@@ -93,6 +93,13 @@ void CSprite::SetMatrixTransformation(LPD3DXSPRITE spriteBrush, const CTransform
 }
 
 //Simply draw sprite based on previous transformation matrix (If was set before drawing)
+void CSprite::DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position)
+{
+	RECT rect = CalcRect(1);
+	D3DXVECTOR3 position3D(position.x, position.y, 0);
+	spriteBrush->Draw(m_texture, &rect, NULL, &position3D, D3DCOLOR_XRGB(m_colors.R, m_colors.G, m_colors.B));
+}
+
 void CSprite::DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b)
 {
 	RECT rect = CalcRect(1);
