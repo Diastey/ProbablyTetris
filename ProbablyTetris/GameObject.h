@@ -30,7 +30,7 @@ public:
 	GameObject() = default;
 
 	template<typename T, typename... Args>
-	T& Add(Args&&... args)
+	T& Set(Args&&... args)
 	{
 		auto& component = std::get<T>(m_components);
 		component = T(std::forward<Args>(args)...);

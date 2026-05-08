@@ -37,6 +37,7 @@ public:
 
 	bool InitializeSprite(IDirect3DDevice9* d3dDevice, std::string fileName);
 	bool InitializeSpriteTransparent(IDirect3DDevice9* d3dDevice, std::string, int r, int g, int b);
+	void SetColor(const Colors& color);
 
 	void ReleaseSprite();
 	//Formula to calculate rectangle

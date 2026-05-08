@@ -24,6 +24,11 @@ bool CSprite::InitializeSpriteTransparent(IDirect3DDevice9* d3dDevice, std::stri
 	return true;
 }
 
+void CSprite::SetColor(const Colors& color)
+{
+	this->m_colors = color;
+}
+
 //Release the texture object
 void CSprite::ReleaseSprite()
 {

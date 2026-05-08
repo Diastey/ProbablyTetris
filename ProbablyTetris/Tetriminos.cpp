@@ -1,24 +1,26 @@
 #include "Tetriminos.h"
 
-void Tetriminos::Init(CSprite sprite, Tetrimino tetrimino)
+void Tetriminos::Init(CSprite sprite, Tetrimino tetrimino, int matrixMiddleX)
 {
 	//m_pivotPoint = tetrimino.pivotPoint;
 	m_matrixSize = tetrimino.pieceMatrixSize;
-	m_pivotPoint.x = tetrimino.pieceMatrixSize / 2;
-	m_pivotPoint.y = 0;
+	m_pivotPoint.x = matrixMiddleX;
+	m_pivotPoint.y = -1;
 	m_locked = false;
+	sprite.SetColor(tetrimino.color);
 
 	for (int i = 0;i < 4;i++)
 	{
 		GameObject newUnit;
-		newUnit.Add<CSprite>(sprite);
-		CPieceUnit newPiece = CPieceUnit(tetrimino.pieces[i].xIndex, tetrimino.pieces[i].yIndex, tetrimino.pivotPoint, tetrimino.color);
-		newUnit.Add<CPieceUnit>(newPiece);
+		newUnit.Set<CSprite>(sprite);
+		CPieceUnit newPiece = CPieceUnit(tetrimino.pieces[i].xIndex, tetrimino.pieces[i].yIndex, tetrimino.pivotPoint);
+		newUnit.Set<CPieceUnit>(newPiece);
 		m_units[i] = newUnit;
 
 		std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
 	}
 	std::cout << "Pivot :" << m_pivotPoint.x << " | " << m_pivotPoint.y << std::endl;
+	std::cout << "Current Direction: " << m_currentDir << std::endl;
 	std::cout << "\n" << std::endl;
 }
 
@@ -27,23 +29,32 @@ TetrminoUnits& Tetriminos::GetPieces()
 	return m_units;
 }
 
+Vec2f& Tetriminos::GetPivotPoint()
+{
+	return m_pivotPoint;
+}
+
 bool Tetriminos::IsLocked()
 {
 	return m_locked;
 }
 
-bool Tetriminos::BoundaryCheck(int xIndex, int yIndex)
+void Tetriminos::SetLocked(bool locked)
 {
-	if (xIndex < m_minXIndex || xIndex > m_maxXIndex)
-	{
-		return false;
-	}
-	if (yIndex < m_minYIndex || yIndex > m_maxYIndex)
-	{
-		return false;
-	}
+	m_locked = locked;
+}
 
-	return true;
+void Tetriminos::MoveLocalPieces(const int newXIndex[4], const int newYindex[4])
+{
+	for (int i = 0;i < 4;i++)
+	{
+		m_units[i].Get<CPieceUnit>().SetLocalIndex(newXIndex[i], newYindex[i]);
+
+		std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
+	}
+	std::cout << "Pivot :" << m_pivotPoint.x << " | " << m_pivotPoint.y << std::endl;
+	std::cout << "Current Direction: " << m_currentDir << std::endl;
+	std::cout << "\n" << std::endl;
 }
 
 void Tetriminos::RotatePiece(RotateDir rotateDirection)
@@ -85,58 +96,9 @@ void Tetriminos::RotatePiece(RotateDir rotateDirection)
 		}
 		break;
 	}
-
-	int finalX[4];
-	int finalY[4];
-	bool isSafe = true;
-
-	for (int i = 0; i < 4 && isSafe; i++)
-	{
-		CPieceUnit& unit = m_units[i].Get<CPieceUnit>();
-
-		float x = (float)unit.GetLocalXIndex();
-		float y = (float)unit.GetLocalYIndex();
-
-		float rotatedX;
-		float rotatedY;
-
-		if (rotateDirection == CW)
-		{
-			rotatedX = y - (unit.GetLocalPivot().y) + (unit.GetLocalPivot().x);
-			rotatedY = -x + (unit.GetLocalPivot().x) + (unit.GetLocalPivot().y);
-		}
-		else
-		{
-			rotatedX = unit.GetLocalPivot().x - (y - unit.GetLocalPivot().y);
-			rotatedY = unit.GetLocalPivot().y + (x - unit.GetLocalPivot().x);
-		}
-
-		finalX[i] = (int)round(rotatedX);
-		finalY[i] = (int)round(rotatedY);
-
-		isSafe = BoundaryCheck(finalX[i] + m_pivotPoint.x, finalY[i] + m_pivotPoint.y);
-
-		if (!isSafe)
-		{
-			std::cout << "Unsafe :" << finalX[i] << " | " << finalY[i] << std::endl;
-		}
-	}
-
-	if (isSafe)
-	{
-		for (int i = 0;i < 4;i++)
-		{
-			m_units[i].Get<CPieceUnit>().SetLocalIndex(finalX[i], finalY[i]);
-
-			std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
-		}
-
-		std::cout << "Pivot :" << m_pivotPoint.x << " | " << m_pivotPoint.y << std::endl;
-		std::cout << "\n" << std::endl;
-	}
 }
 
-void Tetriminos::MovePiece(int moveDirection)
+void Tetriminos::ShiftPiece(int moveDirection)
 {
 	m_pivotPoint.x += moveDirection;
 
@@ -145,6 +107,7 @@ void Tetriminos::MovePiece(int moveDirection)
 		std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
 	}
 	std::cout << "Pivot :" << m_pivotPoint.x << " | " << m_pivotPoint.y << std::endl;
+	std::cout << "Current Direction: " << m_currentDir << std::endl;
 	std::cout << "\n" << std::endl;
 }
 
@@ -157,6 +120,7 @@ void Tetriminos::DropPiece(int amount)
 		std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
 	}
 	std::cout << "Pivot :" << m_pivotPoint.x << " | " << m_pivotPoint.y << std::endl;
+	std::cout << "Current Direction: " << m_currentDir << std::endl;
 	std::cout << "\n" << std::endl;
 }
 
@@ -170,9 +134,6 @@ void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize)
 		m_currentYPos = matrixStartY
 			- (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
 
-		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(),
-			D3DXVECTOR2(m_currentXPos, m_currentYPos), m_units[i].Get<CPieceUnit>().GetColor());
-		//std::cout << m_units[i].Get<CPieceUnit>().GetLocalXIndex() << " | " << m_units[i].Get<CPieceUnit>().GetLocalYIndex() << std::endl;
+		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), D3DXVECTOR2(m_currentXPos, m_currentYPos));
 	}
-	//std::cout << "\n" << std::endl;
 }

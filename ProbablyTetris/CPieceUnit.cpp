@@ -1,10 +1,5 @@
 #include "CPieceUnit.h"
 
-Colors CPieceUnit::GetColor()
-{
-	return m_color;
-}
-
 int CPieceUnit::MovePieceX(int movement)
 {
 	return m_xIndex += movement;
@@ -25,6 +20,7 @@ int CPieceUnit::GetLocalYIndex()
 	return m_yIndex;
 }
 
+#include <iostream>
 int CPieceUnit::GetXIndex(int pivotX)
 {
 	return m_xIndex + pivotX;

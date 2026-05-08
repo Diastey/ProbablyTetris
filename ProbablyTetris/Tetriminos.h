@@ -29,25 +29,23 @@ class Tetriminos
 	int m_matrixSize = 0;
 	CurrentDir m_currentDir = TOP;
 
-	bool m_locked = true;
+	bool m_locked = false;
 
 	int m_currentXPos = 0;
 	int m_currentYPos = 0;
 
-	int m_minXIndex = 0;
-	int m_maxXIndex = 9;
-	int m_minYIndex = -21;
-	int m_maxYIndex = 0;
-
 public:
 	Tetriminos() = default;
 
-	void Init(CSprite sprite, Tetrimino tetrimino);
+	void Init(CSprite sprite, Tetrimino tetrimino, int matrixMiddleX);
 	TetrminoUnits& GetPieces();
+	Vec2f& GetPivotPoint();
 	bool IsLocked();
-	bool BoundaryCheck(int xIndex, int yIndex);
+	void SetLocked(bool locked);
+
+	void MoveLocalPieces(const int newXIndex[4], const int newYindex[4]);
 	void RotatePiece(RotateDir rotateDirection);
-	void MovePiece(int moveDirection);
+	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
 	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
 };

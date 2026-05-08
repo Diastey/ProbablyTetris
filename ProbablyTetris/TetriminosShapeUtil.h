@@ -28,7 +28,7 @@ public:
 
 	static constexpr Tetrimino O = { {
 		{ -1, 0 }, { 0, 0 }, { -1, -1 }, { 0, -1 }
-	},4,{ -0.5, -0.5 },PieceColors::Yellow };
+	},2,{ -0.5, -0.5 },PieceColors::Yellow };
 
 	static constexpr Tetrimino S = { {
 		{ 0, 1 }, { 1, 1 }, { -1, 0 }, { 0, 0 }
