@@ -1,7 +1,7 @@
 #pragma once
 #include "CPieceUnit.h"
 #include "GameObject.h"
-#include "TetriminosShapeUtil.h"
+#include "TetriminosShapeDef.h"
 #include "DirectXManager.h"
 #include "GameWindowManager.h"
 #include <array>
@@ -29,8 +29,6 @@ class Tetriminos
 	int m_matrixSize = 0;
 	CurrentDir m_currentDir = TOP;
 
-	bool m_locked = false;
-
 	int m_currentXPos = 0;
 	int m_currentYPos = 0;
 
@@ -40,12 +38,10 @@ public:
 	void Init(CSprite sprite, Tetrimino tetrimino, int matrixMiddleX);
 	TetrminoUnits& GetPieces();
 	Vec2f& GetPivotPoint();
-	bool IsLocked();
-	void SetLocked(bool locked);
 
 	void MoveLocalPieces(const int newXIndex[4], const int newYindex[4]);
 	void RotatePiece(RotateDir rotateDirection);
 	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
-	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
+	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, bool justDraw);
 };

@@ -34,9 +34,6 @@
     <Filter Include="Header Files\Templates">
       <UniqueIdentifier>{daf76e27-1a33-41cd-9822-45e4ade1ee5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utilities">
-      <UniqueIdentifier>{599c7fc7-faa7-4c85-8c9f-58a30a0eb9f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{0e9a3232-e648-44b2-9eb2-3aeeed2ae06a}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,12 @@
     </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{c177a1ee-c761-40ec-83bc-ee7d8c892ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Defines">
+      <UniqueIdentifier>{599c7fc7-faa7-4c85-8c9f-58a30a0eb9f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{f70fc175-9f10-44e6-9f3f-cd40a568f5b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,8 +134,8 @@
     <ClInclude Include="CPieceUnit.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ColorsUtil.h">
-      <Filter>Header Files\Utilities</Filter>
+    <ClInclude Include="ColorsDef.h">
+      <Filter>Header Files\Defines</Filter>
     </ClInclude>
     <ClInclude Include="MatrixRow.h">
       <Filter>Header Files\Objects</Filter>
@@ -140,10 +143,13 @@
     <ClInclude Include="Tetriminos.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="TetriminosShapeUtil.h">
-      <Filter>Header Files\Utilities</Filter>
+    <ClInclude Include="TetriminosShapeDef.h">
+      <Filter>Header Files\Defines</Filter>
     </ClInclude>
-    <ClInclude Include="MathUtil.h">
+    <ClInclude Include="Vec2Struct.h">
+      <Filter>Header Files\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

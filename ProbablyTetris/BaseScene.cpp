@@ -29,3 +29,10 @@ void BaseScene::UpdateCursorPosition(int cursorObjectIndex)
 {
 
 }
+
+void BaseScene::ReleaseScene()
+{
+	delete m_frameTimer;
+
+	Release();
+}

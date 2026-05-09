@@ -2,8 +2,8 @@
 
 struct Vec2
 {
-	int xIndex;
-	int yIndex;
+	int x;
+	int y;
 };
 struct Vec2f
 {

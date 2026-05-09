@@ -1,6 +1,6 @@
 #pragma once
-#include "ColorsUtil.h"
-#include "MathUtil.h"
+#include "ColorsDef.h"
+#include "Vec2Struct.h"
 #include <array>
 
 struct Tetrimino

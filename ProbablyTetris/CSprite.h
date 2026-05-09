@@ -4,7 +4,7 @@
 #include <string>
 #include "Component.h"
 #include "CTransform.h"
-#include "ColorsUtil.h"
+#include "ColorsDef.h"
 
 class CSprite :public Component
 {

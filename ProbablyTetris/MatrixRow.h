@@ -4,7 +4,9 @@
 
 class MatrixRow
 {
+public:
 	std::vector<GameObject> m_matrixUnits;
+	int m_totalOccupied = 0;
 
 public:
 	MatrixRow() = default;
@@ -15,10 +17,10 @@ public:
 
 	std::vector<GameObject>& GetUnits();
 	void AddUnit(GameObject& newUnit);
-	void SetOccupied(int index);
-	int TotalOccupied();
-	bool RowOccupied();
+	void SetOccupiedAt(int index);
+	int RecalcTotalOccupied();
+	bool RowFullyOccupied();
 	void ClearRow();
-	void CopyRow(const std::vector<GameObject>& newRow);
+	void CopyRow(const MatrixRow& newRow);
 	void ReleaseMatrix();
 };

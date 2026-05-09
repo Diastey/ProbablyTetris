@@ -10,37 +10,40 @@ void MatrixRow::AddUnit(GameObject& newUnit)
 	m_matrixUnits.push_back(newUnit);
 }
 
-void MatrixRow::SetOccupied(int index)
+void MatrixRow::SetOccupiedAt(int index)
 {
 	m_matrixUnits[index].Get<CMatrixUnit>().SetOccupied(true);
+	m_totalOccupied++;
 }
 
-int MatrixRow::TotalOccupied()
+int MatrixRow::RecalcTotalOccupied()
 {
-	int totalOccupied = 0;
+	m_totalOccupied = 0;
 	for (GameObject& unit : m_matrixUnits)
 	{
 		if (unit.Get<CMatrixUnit>().IsOccupied())
 		{
-			totalOccupied++;
+			m_totalOccupied++;
 		}
 	}
-	return totalOccupied;
+	return m_totalOccupied;
 }
 
-bool MatrixRow::RowOccupied()
+bool MatrixRow::RowFullyOccupied()
 {
-	return TotalOccupied() == m_matrixUnits.size();
+	return m_totalOccupied == m_matrixUnits.size();
 }
 
 void MatrixRow::ClearRow()
 {
 	m_matrixUnits.clear();
+	m_totalOccupied = 0;
 }
 
-void MatrixRow::CopyRow(const std::vector<GameObject>& newRow)
+void MatrixRow::CopyRow(const MatrixRow& newRow)
 {
-	m_matrixUnits = newRow;
+	m_matrixUnits = newRow.m_matrixUnits;
+	m_totalOccupied = newRow.m_totalOccupied;
 }
 
 void MatrixRow::ReleaseMatrix()

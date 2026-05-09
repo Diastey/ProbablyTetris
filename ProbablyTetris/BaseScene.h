@@ -43,6 +43,7 @@ public:
 	void Input();
 	void AudioUpdate();
 	void UpdateCursorPosition(int cursorObjectIndex);
+	void ReleaseScene();
 
 	virtual bool Initialize() = 0;
 	virtual void Update(int frames) = 0;

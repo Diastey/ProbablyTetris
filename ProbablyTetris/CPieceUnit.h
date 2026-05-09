@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "MathUtil.h"
+#include "Vec2Struct.h"
 
 class CPieceUnit :public Component
 {
