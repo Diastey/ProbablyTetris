@@ -6,12 +6,11 @@ class SceneStackManager
 {
 	static SceneStackManager* instance;
 
-	SceneStackManager() = default;
-	~SceneStackManager();
-
 	std::stack<BaseScene*> sceneStack;
 
 public:
+	SceneStackManager() = default;
+	~SceneStackManager();
 	static SceneStackManager* GetInstance()
 	{
 		if (instance == nullptr)
@@ -27,5 +26,10 @@ public:
 	void UpdateSceneStack(SceneUpdateResult result);
 	void CloseGame();
 	bool IsEmpty();
+	static void DestroyInstance()
+	{
+		delete instance;
+		instance = nullptr;
+	}
 };
 

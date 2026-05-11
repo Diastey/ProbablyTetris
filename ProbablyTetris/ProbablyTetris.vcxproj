@@ -34,10 +34,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -74,6 +74,10 @@
     <IncludePath>$(DXSDK_DIR)include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(DXSDK_DIR)include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -97,8 +101,9 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

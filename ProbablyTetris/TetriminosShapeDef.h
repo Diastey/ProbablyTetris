@@ -45,4 +45,8 @@ public:
 	static constexpr std::array<Tetrimino, 7> All = {
 		I, J, L, O, S, T, Z
 	};
+
+	static constexpr Tetrimino Silhouette = { {
+		{ 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }
+	},0,{ 0, 0 },PieceColors::Gray };
 };

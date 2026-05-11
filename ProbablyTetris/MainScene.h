@@ -9,38 +9,53 @@
 #include <cstdlib>
 #include <iostream>
 
+enum DelayInputTypes
+{
+	Other,
+	Left,
+	Right,
+	Down
+};
+
 class MainScene :public BaseScene
 {
+	// Game data
 	std::vector<MatrixRow> m_theMatrix;
-	std::vector<int> m_rowsCompleted;
+	std::vector<int> m_rowsToClear;
+	bool lose = false;
+	DelayInputTypes m_lastInput = Other;
 
-	// Constants
+	// Tetrimino
+	Tetriminos currentTetrimino;
+	Tetriminos currentTetriminoShow;
+	Tetriminos silhouetteTetrimino;
+	Tetriminos nextTetrimino;
+	bool m_tetriminoLocked = false;
+
+	// Constants for the matrix
+	const int deadZone = 2;
 	const int m_matrixRows = 22;
 	const int m_matrixCols = 10;
 	const int m_spriteSize = 32;
-	const float m_initialTimer = 1.5;
-	const float m_minTimer = 0.5;
-	const float m_timerFastenAmount = 0.1;
-	const int m_timerFastenRequirement = 5;
-	const int ignoreRow = 2;
 	const int m_matrixStartX = ((GameWindowManager::GetInstance()->GetWindowWidth()) / 2) - ((m_spriteSize * m_matrixCols) / 2);
 	const int m_matrixStartY = ((GameWindowManager::GetInstance()->GetWindowHeight()) / 2) - ((m_spriteSize * m_matrixRows) / 2);
 	const int m_showCurrentTetriminoPositionX = m_matrixStartX;
 	const int m_showCurrentTetriminoPositionY = m_matrixStartY / 2;
 	const int m_nextTetriminoPositionX = m_matrixStartX + (m_matrixCols * m_spriteSize);
 	const int m_nextTetriminoPositionY = GameWindowManager::GetInstance()->GetWindowHeight() / 2;
+	// For tiemrs
+	const float m_initialTimer = 1.5;
+	const float m_minTimer = 0.5;
+	const float m_timerFastenAmount = 0.1;
+	const int m_timerFastenRequirement = 5;
+	const float m_inputInterval = 0.1;
 
 	// Sprites
 	CSprite m_matrixSprite = CSprite(m_spriteSize, m_spriteSize, { 155,155,155 });
 	CSprite m_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
 
-	// Tetrimino
-	Tetriminos currentTetrimino;
-	Tetriminos currentTetriminoShow;
-	Tetriminos nextTetrimino;
-	bool m_tetriminoLocked = false;
-
 	// Timer
+	Timer m_inputTimer;
 	Timer m_tetriminoTimer;
 
 	// Cleared animation
@@ -58,12 +73,20 @@ public:
 	{
 	}
 
+	// Timer Chekcs
 	void AutoDrop();
-	void SpawnNewPiece();
+	bool InputTimer();
+	DelayInputTypes GetCurrentMovementInput();
+	bool DelaySameInput(DelayInputTypes newInput);
+
+	// The Matrix controls
+	void RandSpawnNewPiece();
+	void SpawnNewPiece(int pieceNum);
 	MatrixRow& GetMatrixRow(int yIndex);
 	GameObject& GetMatrixUnitAt(int xIndex, int yIndex);
 	void SetMatrixUnitOccupied(int xIndex, int yIndex, bool occupied);
 
+	// Current Piece controls
 	bool RotatePieceAttempt(RotateDir rotateDirection);
 	bool ShiftPieceAttempt(int moveDirection);
 	bool PiecesSafeToDrop(int amount);
@@ -71,21 +94,29 @@ public:
 	void DropPieceUntilLocked();
 	int RowsUntiLocked();
 	void PieceLocked();
+
+	// Clearing rows
 	std::vector<int> CheckRowCompleted();
+	void MatrixClearAnimation();
+	void MatrixClearFinish();
+	void InitiateReplayGame();
+	void ReplayGameFinish();
 
-	void MatrixUnlockedAnimation();
-	void MatrixUnlockFinish();
-
+	// Checks
 	bool PieceCollidedCheck(int xIndex, int yIndex);
-	bool BoundaryCheck(int xIndex, int yIndex);
-	bool BorderBoundaryCheck(int xIndex, int yIndex);
-	bool BottomBoundaryCheck(int xIndex, int yIndex);
-	bool UpperBoundaryCheck(int xIndex, int yIndex);
+	bool FullBoundaryCheck(int xIndex, int yIndex);
+	bool BorderBoundaryCheck(int xIndex);
+	bool BottomBoundaryCheck(int yIndex);
+	bool UpperBoundaryCheck(int yIndex);
 
 	bool Initialize() override;
 	void Update(int frames) override;
 	void Render() override;
 	void Release() override;
+
+	// UI
+	void DrawSilhouette();
+	void DrawCurrentAndNextPiece();
 };
 
 //m_tetriminos[0].Init(m_pieceSprite, TetriminoShapes::I);

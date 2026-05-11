@@ -1,8 +1,8 @@
 #pragma once
-#include <d3dx9.h>
-#include <d3d9.h>
-#include <Windows.h>
-#include <string>
+#pragma comment(lib, "d3dx9.lib")
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dinput8.lib")
 
 #include "GameWindowManager.h"
 #include "DirectXManager.h"
@@ -19,7 +19,7 @@ DirectXManager* DirectXManager::instance = nullptr;
 InputManager* InputManager::instance = nullptr;
 SceneStackManager* SceneStackManager::instance = nullptr;
 
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR lpCmdLine, int nShowCmd)
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	GameWindowManager::GetInstance()->InitializeWindow(hInstance, 1024, 800, "ProbablyTetris");
@@ -53,10 +53,15 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 		}
 	}
 
-	InputManager::GetInstance()->ReleaseInputDevice();
-	DirectXManager::GetInstance()->ReleaseRender();
+	//InputManager::GetInstance()->ReleaseInputDevice();
+	//DirectXManager::GetInstance()->ReleaseRender();
 
-	GameWindowManager::GetInstance()->Cleanup();
+	//GameWindowManager::GetInstance()->Cleanup();
+
+	SceneStackManager::DestroyInstance();
+	InputManager::DestroyInstance();
+	DirectXManager::DestroyInstance();
+	GameWindowManager::DestroyInstance();
 
 	return 0;
 }

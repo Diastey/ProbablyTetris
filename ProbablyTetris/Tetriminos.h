@@ -34,14 +34,24 @@ class Tetriminos
 
 public:
 	Tetriminos() = default;
+	~Tetriminos()
+	{
+		for (GameObject& objs : m_units)
+		{
+			objs.ReleaseObject();
+		}
+	}
 
 	void Init(CSprite sprite, Tetrimino tetrimino, int matrixMiddleX);
 	TetrminoUnits& GetPieces();
 	Vec2f& GetPivotPoint();
 
+	void CopyPiecesPosition(Tetriminos& tetriminoToCopy);
+
 	void MoveLocalPieces(const int newXIndex[4], const int newYindex[4]);
 	void RotatePiece(RotateDir rotateDirection);
 	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
-	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, bool justDraw);
+	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore);
+	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
 };

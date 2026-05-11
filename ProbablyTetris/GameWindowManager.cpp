@@ -13,6 +13,11 @@ LRESULT CALLBACK MainWindowProcedure(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return GameWindowPTR::globalPtr->WindowProcedure(hWnd, message, wParam, lParam);
 }
 
+GameWindowManager::~GameWindowManager()
+{
+	Cleanup();
+}
+
 void GameWindowManager::InitializeWindow(HINSTANCE hInstance, const int width, const int height, const std::string title)
 {
 	m_hInstance = hInstance;

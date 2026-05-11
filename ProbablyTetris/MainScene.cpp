@@ -11,12 +11,70 @@ void MainScene::AutoDrop()
 	}
 }
 
-void MainScene::SpawnNewPiece()
+bool MainScene::InputTimer()
+{
+	return m_inputTimer.TimerCheck(m_frameTimer->GetTimePassed());
+}
+
+DelayInputTypes MainScene::GetCurrentMovementInput()
+{
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_A))
+	{
+		return Left;
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_D))
+	{
+		return Right;
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_S))
+	{
+		return Down;
+	}
+
+	return Other;
+}
+
+bool MainScene::DelaySameInput(DelayInputTypes newInput)
+{
+
+	if (m_lastInput != newInput)
+	{
+		m_lastInput = newInput;
+		m_inputTimer.ResetTimer();
+	}
+	else
+	{
+		if (!InputTimer())
+		{
+			m_lastInput = newInput;
+			return false;
+		}
+		else
+		{
+			m_lastInput = newInput;
+		}
+	}
+
+	return true;
+}
+
+void MainScene::RandSpawnNewPiece()
 {
 	m_tetriminoLocked = false;
 	currentTetrimino = nextTetrimino;
-	currentTetriminoShow = nextTetrimino;
+	currentTetriminoShow = currentTetrimino;
 	nextTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7], (m_matrixCols / 2));
+	m_tetriminoTimer.ResetTimer();
+	m_inputTimer.ResetTimer();
+}
+
+void MainScene::SpawnNewPiece(int pieceNum)
+{
+	m_tetriminoLocked = false;
+	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[pieceNum], (m_matrixCols / 2));
+	currentTetriminoShow = currentTetrimino;
+	m_tetriminoTimer.ResetTimer();
+	m_inputTimer.ResetTimer();
 }
 
 MatrixRow& MainScene::GetMatrixRow(int yIndex)
@@ -32,6 +90,36 @@ GameObject& MainScene::GetMatrixUnitAt(int xIndex, int yIndex)
 void MainScene::SetMatrixUnitOccupied(int xIndex, int yIndex, bool occupied)
 {
 	GetMatrixUnitAt(xIndex, yIndex).Get<CMatrixUnit>().SetOccupied(occupied);
+}
+
+void MainScene::InitiateReplayGame()
+{
+	m_tetriminoLocked = true;
+	m_rowsToClear.clear();
+	for (int i = 0;i < m_matrixRows;i++)
+	{
+		m_rowsToClear.push_back(i);
+	}
+}
+
+void MainScene::ReplayGameFinish()
+{
+	lose = false;
+	m_theMatrix.clear();
+	for (int i = 0;i < m_matrixRows;i++)
+	{
+		MatrixRow newRow = MatrixRow();
+		for (int j = 0;j < m_matrixCols;j++)
+		{
+			GameObject matrixUnit = GameObject();
+			matrixUnit.Set<CSprite>(m_matrixSprite);
+			matrixUnit.Set<CMatrixUnit>(CMatrixUnit());
+			newRow.AddUnit(matrixUnit);
+		}
+		m_theMatrix.push_back(newRow);
+	}
+
+	RandSpawnNewPiece();
 }
 
 bool MainScene::RotatePieceAttempt(RotateDir rotateDirection)
@@ -63,7 +151,7 @@ bool MainScene::RotatePieceAttempt(RotateDir rotateDirection)
 		finalX[i] = (int)round(rotatedX);
 		finalY[i] = (int)round(rotatedY);
 
-		if (!BoundaryCheck(finalX[i] + currentTetrimino.GetPivotPoint().x, finalY[i] + currentTetrimino.GetPivotPoint().y))
+		if (!FullBoundaryCheck(finalX[i] + currentTetrimino.GetPivotPoint().x, finalY[i] + currentTetrimino.GetPivotPoint().y))
 		{
 			std::cout << "Unsafe(Boudary) :" << finalX[i] << " | " << finalY[i] << std::endl;
 			return false;
@@ -87,7 +175,7 @@ bool MainScene::ShiftPieceAttempt(int moveDirection)
 		CPieceUnit& unit = currentTetrimino.GetPieces()[i].Get<CPieceUnit>();
 		int newX = unit.GetXIndex(currentTetrimino.GetPivotPoint().x) + moveDirection;
 
-		if (!BoundaryCheck(newX, unit.GetYIndex(currentTetrimino.GetPivotPoint().y)))
+		if (!FullBoundaryCheck(newX, unit.GetYIndex(currentTetrimino.GetPivotPoint().y)))
 		{
 			//std::cout << "Unsafe(Boudary) :" << newX << " | " << y << std::endl;
 			return false;
@@ -108,7 +196,7 @@ bool MainScene::PiecesSafeToDrop(int amount)
 		CPieceUnit& unit = currentTetrimino.GetPieces()[i].Get<CPieceUnit>();
 		int newY = unit.GetYIndex(currentTetrimino.GetPivotPoint().y) + amount;
 
-		if (!BoundaryCheck(unit.GetXIndex(currentTetrimino.GetPivotPoint().x), newY))
+		if (!FullBoundaryCheck(unit.GetXIndex(currentTetrimino.GetPivotPoint().x), newY))
 		{
 			//std::cout << "Unsafe(Boudary) :" << unit.GetXIndex(currentTetrimino.GetPivotPoint().x) << " | " << newY << std::endl;
 			return false;
@@ -159,19 +247,24 @@ void MainScene::PieceLocked()
 		int x = obj.Get<CPieceUnit>().GetXIndex(currentTetrimino.GetPivotPoint().x);
 		int y = -obj.Get<CPieceUnit>().GetYIndex(currentTetrimino.GetPivotPoint().y);
 
+		if (!UpperBoundaryCheck(y))
+		{
+			lose = true;
+		}
+
 		m_theMatrix[y].SetOccupiedAt(x);
 		m_theMatrix[y].GetUnits()[x].Set<CSprite>(obj.Get<CSprite>());
 	}
 
-	m_rowsCompleted.clear();
-	m_rowsCompleted = CheckRowCompleted();
-	if (m_rowsCompleted.size() > 0)
+	m_rowsToClear.clear();
+	m_rowsToClear = CheckRowCompleted();
+	if (m_rowsToClear.size() > 0)
 	{
 		m_tetriminoLocked = true;
 	}
 	else
 	{
-		SpawnNewPiece();
+		RandSpawnNewPiece();
 	}
 }
 
@@ -190,38 +283,43 @@ std::vector<int> MainScene::CheckRowCompleted()
 	return rows;
 }
 
-void MainScene::MatrixUnlockedAnimation()
+void MainScene::MatrixClearAnimation()
 {
-	for (int i = 0;i < m_rowsCompleted.size();i++)
+	for (int i = 0;i < m_rowsToClear.size();i++)
 	{
-		m_theMatrix[m_rowsCompleted[i]].GetUnits()[anim_currentLeft].Set<CSprite>(m_matrixSprite);
-		m_theMatrix[m_rowsCompleted[i]].GetUnits()[anim_currentRight].Set<CSprite>(m_matrixSprite);
+		m_theMatrix[m_rowsToClear[i]].GetUnits()[anim_currentLeft].Set<CSprite>(m_matrixSprite);
+		m_theMatrix[m_rowsToClear[i]].GetUnits()[anim_currentRight].Set<CSprite>(m_matrixSprite);
 	}
 	anim_currentLeft--;
 	anim_currentRight++;
 
 	if (anim_currentLeft < 0 && anim_currentRight >(m_matrixCols - 1))
 	{
-		MatrixUnlockFinish();
+		anim_currentLeft = anim_leftStart;
+		anim_currentRight = anim_rightStart;
+		if (!lose)
+		{
+			MatrixClearFinish();
+		}
+		else
+		{
+			ReplayGameFinish();
+		}
 	}
 }
 
-void MainScene::MatrixUnlockFinish()
+void MainScene::MatrixClearFinish()
 {
-	m_tetriminoLocked = false;
-	anim_currentLeft = anim_leftStart;
-	anim_currentRight = anim_rightStart;
-
-	for (int i = 0;i < m_rowsCompleted.size();i++)
+	for (int i = 0;i < m_rowsToClear.size();i++)
 	{
-		m_theMatrix[m_rowsCompleted[i]].ClearRow();
-		for (int j = 0;j < m_rowsCompleted[i];j++)
+		m_theMatrix[m_rowsToClear[i]].ClearRow();
+		for (int j = 0;j < m_rowsToClear[i];j++)
 		{
-			m_theMatrix[m_rowsCompleted[i] - j].CopyRow(m_theMatrix[m_rowsCompleted[i] - j - 1]);
+			m_theMatrix[m_rowsToClear[i] - j].CopyRow(m_theMatrix[m_rowsToClear[i] - j - 1]);
 		}
 	}
 
-	SpawnNewPiece();
+	RandSpawnNewPiece();
 }
 
 bool MainScene::PieceCollidedCheck(int xIndex, int yIndex)
@@ -229,35 +327,56 @@ bool MainScene::PieceCollidedCheck(int xIndex, int yIndex)
 	return !GetMatrixUnitAt(xIndex, -yIndex).Get<CMatrixUnit>().IsOccupied();
 }
 
-bool MainScene::BoundaryCheck(int xIndex, int yIndex)
+bool MainScene::FullBoundaryCheck(int xIndex, int yIndex)
+{
+	if (!BorderBoundaryCheck(xIndex))
+	{
+		return false;
+	}
+
+	if (!BottomBoundaryCheck(yIndex))
+	{
+		return false;
+	}
+
+	//if (!UpperBoundaryCheck(yIndex))
+	//{
+	//	return false;
+	//}
+
+	//if (-yIndex < 0 || -yIndex > m_matrixRows - 1)
+	//{
+	//	return false;
+	//}
+
+	return true;
+}
+
+bool MainScene::BorderBoundaryCheck(int xIndex)
 {
 	if (xIndex < 0 || xIndex > m_matrixCols - 1)
 	{
-		//std::cout << "Boundary X: " << xIndex << std::endl;
 		return false;
 	}
-	if (-yIndex < 0 || -yIndex > m_matrixRows - 1)
+	return true;
+}
+
+bool MainScene::BottomBoundaryCheck(int yIndex)
+{
+	if (-yIndex > m_matrixRows - 1)
 	{
-		//std::cout << "Boundary Y: " << -yIndex << std::endl;
 		return false;
 	}
 
 	return true;
 }
 
-bool MainScene::UpperBoundaryCheck(int xIndex, int yIndex)
+bool MainScene::UpperBoundaryCheck(int yIndex)
 {
-	if (xIndex < 0 || xIndex > m_matrixCols - 1)
+	if (yIndex <= deadZone)
 	{
-		//std::cout << "Boundary X: " << xIndex << std::endl;
 		return false;
 	}
-	if (-yIndex < 0 || -yIndex > m_matrixRows - 1)
-	{
-		//std::cout << "Boundary Y: " << -yIndex << std::endl;
-		return false;
-	}
-
 	return true;
 }
 
@@ -286,28 +405,69 @@ bool MainScene::Initialize()
 		m_theMatrix.push_back(newRow);
 	}
 
+	// Initialize tetriminos
 	srand(time(0));
 	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7], (m_matrixCols / 2));
 	currentTetriminoShow = currentTetrimino;
+	silhouetteTetrimino.Init(m_pieceSprite, TetriminoShapes::Silhouette, (m_matrixCols / 2));
 	nextTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7], (m_matrixCols / 2));
-	m_tetriminoTimer = Timer(m_initialTimer);
+
+	// Initialize timers
+	m_tetriminoTimer = Timer(m_initialTimer, true);
+	m_inputTimer = Timer(m_inputInterval, true);
 
 	return true;
 }
 
 void MainScene::Update(int frames)
 {
-	AutoDrop();
-
-	if (m_tetriminoLocked && m_rowsCompleted.size() > 0)
+	if (lose && !m_tetriminoLocked)
 	{
-		MatrixUnlockedAnimation();
+		InitiateReplayGame();
+		return;
+	}
+
+	if (m_tetriminoLocked && m_rowsToClear.size() > 0)
+	{
+		MatrixClearAnimation();
 		return;
 	}
 
 	if (m_tetriminoLocked)
 	{
 		return;
+	}
+
+	AutoDrop();
+
+	// Shape testings
+	if (InputManager::GetInstance()->IsKeyDown(DIK_1))
+	{
+		SpawnNewPiece(0);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_2))
+	{
+		SpawnNewPiece(1);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_3))
+	{
+		SpawnNewPiece(2);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_4))
+	{
+		SpawnNewPiece(3);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_5))
+	{
+		SpawnNewPiece(4);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_6))
+	{
+		SpawnNewPiece(5);
+	}
+	if (InputManager::GetInstance()->IsKeyDown(DIK_7))
+	{
+		SpawnNewPiece(6);
 	}
 
 	// Rotate counter clock-wise
@@ -320,73 +480,56 @@ void MainScene::Update(int frames)
 	{
 		RotatePieceAttempt(CW);
 	}
-	// Mirror rotate
-	if (InputManager::GetInstance()->IsKeyDown(DIK_W))
-	{
-		//if (!DropPieceAttempt(1))
-		//{
-		//	PieceLocked();
-		//}
-	}
-	// Move down
-	if (InputManager::GetInstance()->IsKeyDown(DIK_S))
-	{
-		if (!DropPieceAttempt(-1))
-		{
-			PieceLocked();
-			m_tetriminoTimer.ResetTimer();
-		}
-	}
-	// Move left
-	if (InputManager::GetInstance()->IsKeyDown(DIK_A))
-	{
-		if (ShiftPieceAttempt(-1))
-		{
-			currentTetrimino.ShiftPiece(-1);
-		}
-	}
-	// Move right
-	if (InputManager::GetInstance()->IsKeyDown(DIK_D))
-	{
-		if (ShiftPieceAttempt(1))
-		{
-			currentTetrimino.ShiftPiece(1);
-		}
-	}
 	// Drop
 	if (InputManager::GetInstance()->IsKeyDown(DIK_SPACE))
 	{
 		DropPieceUntilLocked();
 	}
 
-	// Shape testings
-	if (InputManager::GetInstance()->IsKeyDown(DIK_1))
+	DelayInputTypes currentInput = GetCurrentMovementInput();
+
+	if (currentInput == Other)
 	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[0], (m_matrixCols / 2));
+		return;
 	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_2))
+
+	if (!DelaySameInput(currentInput))
 	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[1], (m_matrixCols / 2));
+		return;
 	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_3))
+
+	switch (currentInput)
 	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[2], (m_matrixCols / 2));
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_4))
-	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[3], (m_matrixCols / 2));
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_5))
-	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[4], (m_matrixCols / 2));
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_6))
-	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[5], (m_matrixCols / 2));
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_7))
-	{
-		currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[6], (m_matrixCols / 2));
+	case Left:
+		// Move left
+		if (ShiftPieceAttempt(-1))
+		{
+			currentTetrimino.ShiftPiece(-1);
+			if (-RowsUntiLocked() < 1)
+			{
+				m_tetriminoTimer.DelayCurrentTimeByPercentage(0.1);
+			}
+		}
+		break;
+	case Right:
+		// Move right
+		if (ShiftPieceAttempt(1))
+		{
+			currentTetrimino.ShiftPiece(1);
+			if (-RowsUntiLocked() < 1)
+			{
+				m_tetriminoTimer.DelayCurrentTimeByPercentage(0.1);
+			}
+		}
+		break;
+	case Down:
+		// Move down
+		if (!DropPieceAttempt(-1))
+		{
+			PieceLocked();
+		}
+		m_tetriminoTimer.ResetTimer();
+		break;
 	}
 }
 
@@ -396,7 +539,7 @@ void MainScene::Render()
 	int rowCount = 0;
 	for (MatrixRow& rows : m_theMatrix)
 	{
-		if (rowCount > ignoreRow)
+		if (rowCount > deadZone)
 		{
 			for (GameObject& obj : rows.GetUnits())
 			{
@@ -409,9 +552,9 @@ void MainScene::Render()
 		drawPosition.y += m_spriteSize;
 	}
 
-	currentTetrimino.DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize, false);
-	currentTetriminoShow.DrawPiece(m_showCurrentTetriminoPositionX, m_showCurrentTetriminoPositionY, m_spriteSize, true);
-	nextTetrimino.DrawPiece(m_nextTetriminoPositionX, m_nextTetriminoPositionY, m_spriteSize, true);
+	DrawSilhouette();
+	currentTetrimino.DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize, deadZone);
+	DrawCurrentAndNextPiece();
 }
 
 void MainScene::Release()
@@ -424,4 +567,17 @@ void MainScene::Release()
 	{
 		rows.ReleaseMatrix();
 	}
+}
+
+void MainScene::DrawSilhouette()
+{
+	silhouetteTetrimino.CopyPiecesPosition(currentTetrimino);
+	silhouetteTetrimino.DropPiece(RowsUntiLocked());
+	silhouetteTetrimino.DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize);
+}
+
+void MainScene::DrawCurrentAndNextPiece()
+{
+	currentTetriminoShow.DrawPiece(m_showCurrentTetriminoPositionX, m_showCurrentTetriminoPositionY, m_spriteSize);
+	nextTetrimino.DrawPiece(m_nextTetriminoPositionX, m_nextTetriminoPositionY, m_spriteSize);
 }

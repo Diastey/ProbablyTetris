@@ -6,9 +6,6 @@ class GameWindowManager
 {
 	static GameWindowManager* instance;
 
-	GameWindowManager() = default;
-	~GameWindowManager() = default;
-
 	HINSTANCE m_hInstance;
 	HWND m_hWnd;
 	WNDCLASS m_wndClass;
@@ -18,6 +15,8 @@ class GameWindowManager
 	int m_windowHeight;
 
 public:
+	GameWindowManager() = default;
+	~GameWindowManager();
 	static GameWindowManager* GetInstance()
 	{
 		if (instance == nullptr)
@@ -35,4 +34,9 @@ public:
 	int GetWindowWidth();
 	int GetWindowHeight();
 	void Cleanup();
+	static void DestroyInstance()
+	{
+		delete instance;
+		instance = nullptr;
+	}
 };

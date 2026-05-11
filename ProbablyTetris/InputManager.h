@@ -5,12 +5,9 @@ class InputManager
 {
 	static InputManager* instance;
 
-	InputManager() = default;
-	~InputManager() = default;
-
-	LPDIRECTINPUT8 m_dInput;
-	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice;
-	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice;
+	LPDIRECTINPUT8 m_dInput = nullptr;
+	LPDIRECTINPUTDEVICE8 m_dInputKeyboardDevice = nullptr;
+	LPDIRECTINPUTDEVICE8 m_dInputMouseDevice = nullptr;
 	BYTE m_previousKeyFlags[256];
 	BYTE m_currentKeyFlags[256];
 	DIMOUSESTATE m_mouseState;
@@ -18,10 +15,22 @@ class InputManager
 	bool m_mouseUp[2];
 
 public:
-	LONG currentXpos;
-	LONG currentYpos;
+	LONG currentXpos = 0;
+	LONG currentYpos = 0;
 
 public:
+	InputManager()
+	{
+		ZeroMemory(m_previousKeyFlags, 256);
+		ZeroMemory(m_currentKeyFlags, 256);
+		ZeroMemory(&m_mouseState, sizeof(m_mouseState));
+
+		m_mouseDown[0] = false;
+		m_mouseDown[1] = false;
+		m_mouseUp[0] = false;
+		m_mouseUp[1] = false;
+	}
+	~InputManager();
 	static InputManager* GetInstance()
 	{
 		if (instance == nullptr)
@@ -35,10 +44,16 @@ public:
 	void GetInput();
 	void ReleaseInputDevice();
 	DIMOUSESTATE GetMouseState();
+	bool HasAnyKeyInput();
 	bool IsKeyPressed(int key);
 	bool IsKeyDown(int key);
 	bool IsKeyUp(int key);
 	bool IsMouseUp(int key);
 	bool IsMouseDown(int key);
+	static void DestroyInstance()
+	{
+		delete instance;
+		instance = nullptr;
+	}
 };
 

@@ -1,16 +1,21 @@
 #include "InputManager.h"
 
+InputManager::~InputManager()
+{
+	ReleaseInputDevice();
+}
+
 bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBufferHeight)
 {
 	HRESULT hr = NULL;
 	hr = DirectInput8Create(GetModuleHandle(NULL), 0x0800, IID_IDirectInput8, (void**)&m_dInput, NULL);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		return false;
 	}
 
 	hr = m_dInput->CreateDevice(GUID_SysKeyboard, &m_dInputKeyboardDevice, NULL);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		return false;
 	}
@@ -18,7 +23,7 @@ bool InputManager::CreateInputDevice(HWND hWnd, int backBufferWidth, int backBuf
 
 	m_dInputKeyboardDevice->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	hr = m_dInput->CreateDevice(GUID_SysMouse, &m_dInputMouseDevice, NULL);
-	if (FALSE(hr))
+	if (FAILED(hr))
 	{
 		return false;
 	}
@@ -89,7 +94,7 @@ bool InputManager::IsMouseUp(int key)
 
 bool InputManager::IsMouseDown(int key)
 {
-	return (GetMouseState().rgbButtons[0] & 0x80);
+	return (GetMouseState().rgbButtons[key] & 0x80);
 }
 
 void InputManager::ReleaseInputDevice()
@@ -109,4 +114,15 @@ void InputManager::ReleaseInputDevice()
 DIMOUSESTATE InputManager::GetMouseState()
 {
 	return m_mouseState;
+}
+
+bool InputManager::HasAnyKeyInput()
+{
+	for (int i = 0; i < 256; i++)
+	{
+		if (m_currentKeyFlags[i] & 0x80)
+			return true;
+	}
+
+	return false;
 }
