@@ -30,13 +30,13 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 		return 0;
 	}
 
-	if (!InputManager::GetInstance()->CreateInputDevice(GameWindowManager::GetInstance()->GetHWND(), GameWindowManager::GetInstance()->GetWindowWidth(), GameWindowManager::GetInstance()->GetWindowHeight()))
+	if (!InputManager::GetInstance()->CreateInputDevice(GameWindowManager::GetInstance()->GetHWND()))
 	{
 		std::cout << "Input device create failed" << std::endl;
 		return 0;
 	}
 
-	MainScene* mainScene = new MainScene(60);
+	MainScene* mainScene = new MainScene(30);
 	SceneStackManager::GetInstance()->PushScene(mainScene);
 
 	while (GameWindowManager::GetInstance()->IsRunning())

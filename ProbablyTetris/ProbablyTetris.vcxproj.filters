@@ -49,11 +49,20 @@
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{f70fc175-9f10-44e6-9f3f-cd40a568f5b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{83a99585-b1fd-48d6-8ebb-e2ba4c66e0bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{ed38449e-3012-4de4-9f6e-887e889d9fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\UIComponent">
+      <UniqueIdentifier>{75ac0857-3cdd-440a-b32d-001a7cb9b288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Component\UIComponent">
+      <UniqueIdentifier>{51e85d85-fd2f-4778-84a2-754d230ec7ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
@@ -92,6 +101,15 @@
     </ClCompile>
     <ClCompile Include="Tetriminos.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CButton.cpp">
+      <Filter>Source Files\Component\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLabel.cpp">
+      <Filter>Source Files\Component\UIComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +169,18 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>Header Files\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="CButton.h">
+      <Filter>Header Files\Components\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="CLabel.h">
+      <Filter>Header Files\Components\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Header Files\Templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,7 +27,10 @@ public:
 	void SetTargetTime(float targetTime)
 	{
 		m_targetTime = targetTime;
-		m_currentTime = 0;
+	}
+	void AddTargetTime(float targetTime)
+	{
+		m_targetTime += targetTime;
 	}
 	bool TimerCheck(float timePassed)
 	{

@@ -134,6 +134,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="CButton.cpp" />
+    <ClCompile Include="CLabel.cpp" />
     <ClCompile Include="MatrixRow.cpp" />
     <ClCompile Include="CMatrixUnit.cpp" />
     <ClCompile Include="CPieceUnit.cpp" />
@@ -150,7 +152,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="CButton.h" />
+    <ClInclude Include="CLabel.h" />
+    <ClInclude Include="Panel.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIObject.h" />
     <ClInclude Include="Vec2Struct.h" />
     <ClInclude Include="MatrixRow.h" />
     <ClInclude Include="CMatrixUnit.h" />

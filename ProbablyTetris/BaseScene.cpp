@@ -25,10 +25,10 @@ void BaseScene::AudioUpdate()
 
 }
 
-void BaseScene::UpdateCursorPosition(int cursorObjectIndex)
-{
-
-}
+//void BaseScene::UpdateCursorPosition(int cursorObjectIndex)
+//{
+//
+//}
 
 void BaseScene::ReleaseScene()
 {

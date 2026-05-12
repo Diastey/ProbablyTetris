@@ -63,8 +63,6 @@ public:
 	//Draw while setting transformation matrix
 	void DrawSpriteWithMatrix(const int frameCount, LPD3DXSPRITE spriteBrush, const CTransform& transform, const int& r, const int& g, const int& b);
 
-	void Update() override;
-
 	void Release() override
 	{
 		ReleaseSprite();

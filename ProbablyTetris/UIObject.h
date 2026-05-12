@@ -2,33 +2,33 @@
 #include <tuple>
 
 #include "CTransform.h"
+#include "CButton.h"
 #include "CSprite.h"
-#include "CMatrixUnit.h"
-#include "CPieceUnit.h"
+#include "CLabel.h"
 
 enum Tag
 {
 	Default = 0
 };
 
-using ComponentTuple = std::tuple
+using UIComponentTuple = std::tuple
 <
 	CTransform,
 	CSprite,
-	CMatrixUnit,
-	CPieceUnit
+	CButton,
+	CLabel
 >;
 
-class GameObject
+class UIObject
 {
-	//size_t m_id = 0;
-	ComponentTuple m_components;
+	size_t m_id = 0;
+	UIComponentTuple m_components;
 	Tag m_tag = Default;
 	bool m_active = true;
 
 public:
-	GameObject() = default;
-	~GameObject() = default;
+	UIObject() = default;
+	~UIObject() = default;
 
 	template<typename T, typename... Args>
 	T& Set(Args&&... args)
@@ -65,7 +65,7 @@ public:
 		component.exists = false;
 	}
 
-	//size_t Id() const { return m_id; }
+	size_t Id() const { return m_id; }
 	bool IsAlive() const { return m_active; }
 	void Destroy() { m_active = false; }
 	const Tag& GetTag() const { return m_tag; }

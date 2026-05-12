@@ -1,13 +1,22 @@
 #include "MainScene.h"
 
-void MainScene::AutoDrop()
+void MainScene::Gravity()
 {
-	if (m_tetriminoTimer.TimerCheck(m_frameTimer->GetTimePassed()))
+	if (m_gravityTimer.TimerCheck(m_frameTimer->GetTimePassed()))
 	{
 		if (!DropPieceAttempt(-1))
 		{
 			PieceLocked();
 		}
+	}
+}
+
+void MainScene::GravityAccelerate(int& clearedRows)
+{
+	while (clearedRows >= m_gravityAccelerateRequirement && m_gravityTimer.GetTargetTime() > m_minGravityTime)
+	{
+		clearedRows -= m_gravityAccelerateRequirement;
+		m_gravityTimer.AddTargetTime(-m_timerFastenAmount);
 	}
 }
 
@@ -36,8 +45,7 @@ DelayInputTypes MainScene::GetCurrentMovementInput()
 
 bool MainScene::DelaySameInput(DelayInputTypes newInput)
 {
-
-	if (m_lastInput != newInput)
+	if (m_lastInput != newInput || newInput == Other)
 	{
 		m_lastInput = newInput;
 		m_inputTimer.ResetTimer();
@@ -64,7 +72,7 @@ void MainScene::RandSpawnNewPiece()
 	currentTetrimino = nextTetrimino;
 	currentTetriminoShow = currentTetrimino;
 	nextTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7], (m_matrixCols / 2));
-	m_tetriminoTimer.ResetTimer();
+	m_gravityTimer.ResetTimer();
 	m_inputTimer.ResetTimer();
 }
 
@@ -73,7 +81,7 @@ void MainScene::SpawnNewPiece(int pieceNum)
 	m_tetriminoLocked = false;
 	currentTetrimino.Init(m_pieceSprite, TetriminoShapes::All[pieceNum], (m_matrixCols / 2));
 	currentTetriminoShow = currentTetrimino;
-	m_tetriminoTimer.ResetTimer();
+	m_gravityTimer.ResetTimer();
 	m_inputTimer.ResetTimer();
 }
 
@@ -260,7 +268,9 @@ void MainScene::PieceLocked()
 	m_rowsToClear = CheckRowCompleted();
 	if (m_rowsToClear.size() > 0)
 	{
+		m_clearedRows += m_rowsToClear.size();
 		m_tetriminoLocked = true;
+		GravityAccelerate(m_clearedRows);
 	}
 	else
 	{
@@ -413,7 +423,7 @@ bool MainScene::Initialize()
 	nextTetrimino.Init(m_pieceSprite, TetriminoShapes::All[rand() % 7], (m_matrixCols / 2));
 
 	// Initialize timers
-	m_tetriminoTimer = Timer(m_initialTimer, true);
+	m_gravityTimer = Timer(m_initialGravityTIme, true);
 	m_inputTimer = Timer(m_inputInterval, true);
 
 	return true;
@@ -421,16 +431,19 @@ bool MainScene::Initialize()
 
 void MainScene::Update(int frames)
 {
-	if (lose && !m_tetriminoLocked)
+	for (int i = 0;i < frames;i++)
 	{
-		InitiateReplayGame();
-		return;
-	}
+		if (lose && !m_tetriminoLocked)
+		{
+			InitiateReplayGame();
+			return;
+		}
 
-	if (m_tetriminoLocked && m_rowsToClear.size() > 0)
-	{
-		MatrixClearAnimation();
-		return;
+		if (m_tetriminoLocked && m_rowsToClear.size() > 0)
+		{
+			MatrixClearAnimation();
+			return;
+		}
 	}
 
 	if (m_tetriminoLocked)
@@ -438,7 +451,7 @@ void MainScene::Update(int frames)
 		return;
 	}
 
-	AutoDrop();
+	Gravity();
 
 	// Shape testings
 	if (InputManager::GetInstance()->IsKeyDown(DIK_1))
@@ -488,11 +501,6 @@ void MainScene::Update(int frames)
 
 	DelayInputTypes currentInput = GetCurrentMovementInput();
 
-	if (currentInput == Other)
-	{
-		return;
-	}
-
 	if (!DelaySameInput(currentInput))
 	{
 		return;
@@ -507,7 +515,7 @@ void MainScene::Update(int frames)
 			currentTetrimino.ShiftPiece(-1);
 			if (-RowsUntiLocked() < 1)
 			{
-				m_tetriminoTimer.DelayCurrentTimeByPercentage(0.1);
+				m_gravityTimer.DelayCurrentTimeByPercentage(0.1);
 			}
 		}
 		break;
@@ -518,7 +526,7 @@ void MainScene::Update(int frames)
 			currentTetrimino.ShiftPiece(1);
 			if (-RowsUntiLocked() < 1)
 			{
-				m_tetriminoTimer.DelayCurrentTimeByPercentage(0.1);
+				m_gravityTimer.DelayCurrentTimeByPercentage(0.1);
 			}
 		}
 		break;
@@ -528,7 +536,7 @@ void MainScene::Update(int frames)
 		{
 			PieceLocked();
 		}
-		m_tetriminoTimer.ResetTimer();
+		m_gravityTimer.ResetTimer();
 		break;
 	}
 }
@@ -552,9 +560,13 @@ void MainScene::Render()
 		drawPosition.y += m_spriteSize;
 	}
 
+	DrawCurrentAndNextPiece();
+	if (m_tetriminoLocked)
+	{
+		return;
+	}
 	DrawSilhouette();
 	currentTetrimino.DrawPiece(m_matrixStartX, m_matrixStartY, m_spriteSize, deadZone);
-	DrawCurrentAndNextPiece();
 }
 
 void MainScene::Release()

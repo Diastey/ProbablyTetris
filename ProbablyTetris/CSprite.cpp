@@ -136,7 +136,3 @@ void CSprite::DrawSpriteWithMatrix(const int frameCount, LPD3DXSPRITE spriteBrus
 	spriteBrush->SetTransform(&matrix);
 	spriteBrush->Draw(m_texture, &rect, NULL, NULL, D3DCOLOR_XRGB(r, g, b));
 }
-
-void CSprite::Update()
-{
-}

@@ -24,6 +24,7 @@ class MainScene :public BaseScene
 	std::vector<int> m_rowsToClear;
 	bool lose = false;
 	DelayInputTypes m_lastInput = Other;
+	int m_clearedRows = 0;
 
 	// Tetrimino
 	Tetriminos currentTetrimino;
@@ -44,11 +45,11 @@ class MainScene :public BaseScene
 	const int m_nextTetriminoPositionX = m_matrixStartX + (m_matrixCols * m_spriteSize);
 	const int m_nextTetriminoPositionY = GameWindowManager::GetInstance()->GetWindowHeight() / 2;
 	// For tiemrs
-	const float m_initialTimer = 1.5;
-	const float m_minTimer = 0.5;
-	const float m_timerFastenAmount = 0.1;
-	const int m_timerFastenRequirement = 5;
-	const float m_inputInterval = 0.1;
+	const float m_initialGravityTIme = 2;
+	const float m_minGravityTime = 0.4;
+	const float m_timerFastenAmount = 0.2;
+	const int m_gravityAccelerateRequirement = 5;
+	const float m_inputInterval = 0.2;
 
 	// Sprites
 	CSprite m_matrixSprite = CSprite(m_spriteSize, m_spriteSize, { 155,155,155 });
@@ -56,7 +57,7 @@ class MainScene :public BaseScene
 
 	// Timer
 	Timer m_inputTimer;
-	Timer m_tetriminoTimer;
+	Timer m_gravityTimer;
 
 	// Cleared animation
 	int anim_leftStart = (m_matrixCols / 2) - 1;
@@ -65,8 +66,9 @@ class MainScene :public BaseScene
 	int anim_currentRight = anim_rightStart;
 
 	// Testing
-	int x = 0;
-	int y = 0;
+	//int x = 0;
+	//int y = 0;
+	//GameObject testingObj;
 public:
 	MainScene(int fps)
 		:BaseScene(fps)
@@ -74,7 +76,8 @@ public:
 	}
 
 	// Timer Chekcs
-	void AutoDrop();
+	void Gravity();
+	void GravityAccelerate(int& clearedRows);
 	bool InputTimer();
 	DelayInputTypes GetCurrentMovementInput();
 	bool DelaySameInput(DelayInputTypes newInput);
