@@ -41,3 +41,8 @@ void CPieceUnit::SetLocalIndex(int newXIndex, int newYIndex)
 	m_xIndex = newXIndex;
 	m_yIndex = newYIndex;
 }
+
+void CPieceUnit::SetLocalPivot(Vec2f newLocalPivot)
+{
+	m_localPivot = newLocalPivot;
+}

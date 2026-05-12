@@ -42,8 +42,12 @@ void MatrixRow::ClearRow()
 
 void MatrixRow::CopyRow(const MatrixRow& newRow)
 {
-	m_matrixUnits = newRow.m_matrixUnits;
 	m_totalOccupied = newRow.m_totalOccupied;
+	for (int i = 0;i < newRow.m_matrixUnits.size();i++)
+	{
+		m_matrixUnits[i].Set<CSprite>(newRow.m_matrixUnits[i].Get<CSprite>());
+		m_matrixUnits[i].Set<CMatrixUnit>(newRow.m_matrixUnits[i].Get<CMatrixUnit>());
+	}
 }
 
 void MatrixRow::ReleaseMatrix()

@@ -30,4 +30,5 @@ public:
 	int GetYIndex(int pivotY);
 	const Vec2f& GetLocalPivot();
 	void SetLocalIndex(int newXPosition, int newYPosition);
+	void SetLocalPivot(Vec2f newLocalPivot);
 };

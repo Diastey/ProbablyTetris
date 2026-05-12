@@ -10,11 +10,15 @@ void Tetriminos::Init(CSprite sprite, Tetrimino tetrimino, int matrixMiddleX)
 
 	for (int i = 0;i < 4;i++)
 	{
-		GameObject newUnit;
-		newUnit.Set<CSprite>(sprite);
+		m_units[i].Set<CSprite>(sprite);
 		CPieceUnit newPiece = CPieceUnit(tetrimino.pieces[i].x, tetrimino.pieces[i].y, tetrimino.pivotPoint);
-		newUnit.Set<CPieceUnit>(newPiece);
-		m_units[i] = newUnit;
+		m_units[i].Set<CPieceUnit>(newPiece);
+
+		//GameObject newUnit;
+		//newUnit.Set<CSprite>(sprite);
+		//CPieceUnit newPiece = CPieceUnit(tetrimino.pieces[i].x, tetrimino.pieces[i].y, tetrimino.pivotPoint);
+		//newUnit.Set<CPieceUnit>(newPiece);
+		//m_units[i] = newUnit;
 
 		//std::cout << m_units[i].Get<CPieceUnit>().GetXIndex(m_pivotPoint.x) << " | " << m_units[i].Get<CPieceUnit>().GetYIndex(m_pivotPoint.y) << std::endl;
 	}
@@ -37,9 +41,24 @@ void Tetriminos::CopyPiecesPosition(Tetriminos& tetriminoToCopy)
 {
 	m_pivotPoint.x = tetriminoToCopy.GetPivotPoint().x;
 	m_pivotPoint.y = tetriminoToCopy.GetPivotPoint().y;
+	m_matrixSize = tetriminoToCopy.m_matrixSize;
 	for (int i = 0;i < 4;i++)
 	{
 		m_units[i].Get<CPieceUnit>().SetLocalIndex(tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>().GetLocalXIndex(), tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>().GetLocalYIndex());
+	}
+}
+
+void Tetriminos::CopyPieces(Tetriminos& tetriminoToCopy)
+{
+	m_pivotPoint.x = tetriminoToCopy.GetPivotPoint().x;
+	m_pivotPoint.y = tetriminoToCopy.GetPivotPoint().y;
+	m_matrixSize = tetriminoToCopy.m_matrixSize;
+	for (int i = 0;i < 4;i++)
+	{
+		//m_units[i].Set<CPieceUnit>(tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>());
+		m_units[i].Get<CPieceUnit>().SetLocalIndex(tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>().GetLocalXIndex(), tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>().GetLocalYIndex());
+		m_units[i].Get<CPieceUnit>().SetLocalPivot(tetriminoToCopy.GetPieces()[i].Get<CPieceUnit>().GetLocalPivot());
+		m_units[i].Set<CSprite>(tetriminoToCopy.m_units[i].Get<CSprite>());
 	}
 }
 
@@ -123,30 +142,59 @@ void Tetriminos::DropPiece(int amount)
 	//std::cout << "\n" << std::endl;
 }
 
-void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore)
+void Tetriminos::DrawPiece(int rowsToIgnore)
 {
 	for (int i = 0;i < 4;i++)
 	{
-		m_currentXPos = matrixStartX + (m_units[i].Get<CPieceUnit>().GetXIndex(std::ceill(m_pivotPoint.x)) * spriteSize);
-		m_currentYPos = matrixStartY - (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
-
-		if (m_currentYPos > (matrixStartY + (spriteSize * rowsToIgnore)))
+		if (m_units[i].Get<CTransform>().GetPosition().y > rowsToIgnore)
 		{
-			m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), D3DXVECTOR2(m_currentXPos, m_currentYPos));
+			m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), m_units[i].Get<CTransform>().GetPosition());
 		}
 	}
 }
 
-void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize)
+void Tetriminos::DrawPiece()
 {
 	for (int i = 0;i < 4;i++)
 	{
-		m_currentXPos = matrixStartX + (m_units[i].Get<CPieceUnit>().GetXIndex(std::ceill(m_pivotPoint.x)) * spriteSize);
-		m_currentYPos = matrixStartY - (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
-
-		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), D3DXVECTOR2(m_currentXPos, m_currentYPos));
+		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), m_units[i].Get<CTransform>().GetPosition());
 	}
 }
+
+void Tetriminos::CalculatePiecePosition(int matrixStartX, int matrixStartY, int spriteSize)
+{
+	for (int i = 0;i < 4;i++)
+	{
+		int x = matrixStartX + (m_units[i].Get<CPieceUnit>().GetXIndex(std::ceill(m_pivotPoint.x)) * spriteSize);
+		int y = matrixStartY - (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
+		m_units[i].Get<CTransform>().SetPosition(x, y);
+	}
+}
+
+//void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore)
+//{
+//	for (int i = 0;i < 4;i++)
+//	{
+//		m_currentXPos = matrixStartX + (m_units[i].Get<CPieceUnit>().GetXIndex(std::ceill(m_pivotPoint.x)) * spriteSize);
+//		m_currentYPos = matrixStartY - (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
+//
+//		if (m_currentYPos > (matrixStartY + (spriteSize * rowsToIgnore)))
+//		{
+//			m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), D3DXVECTOR2(m_currentXPos, m_currentYPos));
+//		}
+//	}
+//}
+//
+//void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize)
+//{
+//	for (int i = 0;i < 4;i++)
+//	{
+//		m_currentXPos = matrixStartX + (m_units[i].Get<CPieceUnit>().GetXIndex(std::ceill(m_pivotPoint.x)) * spriteSize);
+//		m_currentYPos = matrixStartY - (m_units[i].Get<CPieceUnit>().GetYIndex(std::ceill(m_pivotPoint.y)) * spriteSize);
+//
+//		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), D3DXVECTOR2(m_currentXPos, m_currentYPos));
+//	}
+//}
 
 //void Tetriminos::DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, bool justDraw)
 //{

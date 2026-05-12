@@ -29,9 +29,6 @@ class Tetriminos
 	int m_matrixSize = 0;
 	CurrentDir m_currentDir = TOP;
 
-	int m_currentXPos = 0;
-	int m_currentYPos = 0;
-
 public:
 	Tetriminos() = default;
 	~Tetriminos()
@@ -47,11 +44,15 @@ public:
 	Vec2f& GetPivotPoint();
 
 	void CopyPiecesPosition(Tetriminos& tetriminoToCopy);
+	void CopyPieces(Tetriminos& tetriminoToCopy);
 
 	void MoveLocalPieces(const int newXIndex[4], const int newYindex[4]);
 	void RotatePiece(RotateDir rotateDirection);
 	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
-	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore);
-	void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
+	//void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore);
+	//void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
+	void DrawPiece(int rowsToIgnore);
+	void DrawPiece();
+	void CalculatePiecePosition(int matrixStartX, int matrixStartY, int spriteSize);
 };

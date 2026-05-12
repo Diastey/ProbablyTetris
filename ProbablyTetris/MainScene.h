@@ -34,7 +34,7 @@ class MainScene :public BaseScene
 	bool m_tetriminoLocked = false;
 
 	// Constants for the matrix
-	const int deadZone = 2;
+	const int m_deadZone = 2;
 	const int m_matrixRows = 22;
 	const int m_matrixCols = 10;
 	const int m_spriteSize = 32;
@@ -97,6 +97,7 @@ public:
 	void DropPieceUntilLocked();
 	int RowsUntiLocked();
 	void PieceLocked();
+	void RecalculatePiecesLocations();
 
 	// Clearing rows
 	std::vector<int> CheckRowCompleted();
