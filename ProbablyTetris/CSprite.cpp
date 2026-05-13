@@ -67,13 +67,13 @@ RECT CSprite::CalcRectPosition(const D3DXVECTOR2& position)
 //Simple formula to get the height of sprite out of the spritesheet
 int CSprite::SpriteHeight()
 {
-	return  m_height / m_rows;
+	return  m_spriteHeight;
 }
 
 //Simple formula to get the width of sprite out of the spritesheet
 int CSprite::SpriteWidth()
 {
-	return m_width / m_cols;
+	return m_spriteWidth;
 }
 
 //Formula to get the center point of sprite
@@ -117,6 +117,13 @@ void CSprite::DrawSprite(LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, 
 	RECT rect = CalcRect(1);
 	D3DXVECTOR3 position3D(position.x, position.y, 0);
 	spriteBrush->Draw(m_texture, &rect, NULL, &position3D, D3DCOLOR_XRGB(color.R, color.G, color.B));
+}
+
+void CSprite::DrawSprite(const int frameCount, LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position)
+{
+	RECT rect = CalcRect(frameCount);
+	D3DXVECTOR3 position3D(position.x, position.y, 0);
+	spriteBrush->Draw(m_texture, &rect, NULL, &position3D, D3DCOLOR_XRGB(m_colors.R, m_colors.G, m_colors.B));
 }
 
 void CSprite::DrawSprite(const int frameCount, LPD3DXSPRITE spriteBrush, const D3DXVECTOR2& position, const int& r, const int& g, const int& b)

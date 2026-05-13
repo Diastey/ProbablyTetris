@@ -102,9 +102,6 @@
     <ClCompile Include="Tetriminos.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="CButton.cpp">
-      <Filter>Source Files\Component\UIComponent</Filter>
-    </ClCompile>
     <ClCompile Include="GameMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -172,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="UIObject.h">
       <Filter>Header Files\Templates</Filter>
-    </ClInclude>
-    <ClInclude Include="CButton.h">
-      <Filter>Header Files\Components\UIComponent</Filter>
     </ClInclude>
     <ClInclude Include="CLabel.h">
       <Filter>Header Files\Components\UIComponent</Filter>

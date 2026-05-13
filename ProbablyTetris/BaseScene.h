@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "GameObject.h"
+#include "Panel.h"
 #include "GameWindowManager.h"
 #include "DirectXManager.h"
 #include "InputManager.h"
@@ -27,8 +28,8 @@ struct SceneUpdateResult
 class BaseScene
 {
 protected:
+	Panel m_screenPanel;
 	SceneUpdateResult m_result;
-	std::vector<GameObject> m_gameObjects;
 	FrameTimer* m_frameTimer;
 	int m_currentFrame = 1;
 

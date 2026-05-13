@@ -2,20 +2,13 @@
 #include <tuple>
 
 #include "CTransform.h"
-#include "CButton.h"
 #include "CSprite.h"
 #include "CLabel.h"
-
-enum Tag
-{
-	Default = 0
-};
 
 using UIComponentTuple = std::tuple
 <
 	CTransform,
 	CSprite,
-	CButton,
 	CLabel
 >;
 
@@ -27,7 +20,16 @@ class UIObject
 	bool m_active = true;
 
 public:
-	UIObject() = default;
+	UIObject()
+		:m_id(0)
+	{
+
+	}
+	UIObject(int& id)
+		:m_id(id++)
+	{
+
+	}
 	~UIObject() = default;
 
 	template<typename T, typename... Args>
@@ -67,11 +69,15 @@ public:
 
 	size_t Id() const { return m_id; }
 	bool IsAlive() const { return m_active; }
-	void Destroy() { m_active = false; }
+	void Deactivate() { m_active = false; }
+	void Reactivate() { m_active = true; }
 	const Tag& GetTag() const { return m_tag; }
 
 	void ReleaseObject()
 	{
-		Get<CSprite>().Release();
+		if (Has<CSprite>())
+			Get<CSprite>().Release();
+		if (Has<CLabel>())
+			Get<CLabel>().ReleaseLabel();
 	}
 };

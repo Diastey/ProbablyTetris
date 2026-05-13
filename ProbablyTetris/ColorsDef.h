@@ -21,3 +21,10 @@ public:
 	static constexpr Colors Gray{ 128, 128, 128 };
 	static constexpr Colors Dark{ 0, 0, 0 };
 };
+
+class OtherColors
+{
+public:
+	static constexpr Colors Default{ 255, 255, 255 };
+	static constexpr Colors SemiVisible{ 155, 155, 155 };
+};

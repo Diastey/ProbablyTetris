@@ -1,8 +1,18 @@
 #include "CTransform.h"
 
-D3DXVECTOR2 CTransform::GetPosition()
+D3DXVECTOR2 &CTransform::GetPosition()
 {
 	return m_position;
+}
+
+float CTransform::GetRotation()
+{
+	return m_rotation;
+}
+
+D3DXVECTOR2 &CTransform::GetScaling()
+{
+	return m_scaling;
 }
 
 void CTransform::SetPosition(D3DXVECTOR2 newPosition)

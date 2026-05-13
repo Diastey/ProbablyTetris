@@ -24,7 +24,9 @@ public:
 	{
 	}
 
-	D3DXVECTOR2 GetPosition();
+	D3DXVECTOR2& GetPosition();
+	float GetRotation();
+	D3DXVECTOR2& GetScaling();
 	void SetPosition(D3DXVECTOR2 newPosition);
 	void SetPosition(int x, int y);
 	void SetPosition(float x, float y);

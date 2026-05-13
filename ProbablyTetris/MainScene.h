@@ -20,18 +20,20 @@ enum DelayInputTypes
 class MainScene :public BaseScene
 {
 	// Game data
-	std::vector<MatrixRow> m_theMatrix;
-	std::vector<int> m_rowsToClear;
-	bool lose = false;
-	DelayInputTypes m_lastInput = Other;
-	int m_clearedRows = 0;
+	std::vector<MatrixRow> g_theMatrix;
+	std::vector<int> g_rowsToClear;
+	bool g_lose = false;
+	DelayInputTypes g_lastInput = Other;
+	int g_clearedRows = 0;
+	int g_score = 0;
+	int g_currentStreak = 0;
 
 	// Tetrimino
-	Tetriminos currentTetrimino;
-	Tetriminos currentTetriminoShow;
-	Tetriminos silhouetteTetrimino;
-	Tetriminos nextTetrimino;
-	bool m_tetriminoLocked = false;
+	Tetriminos t_currentTetrimino;
+	Tetriminos t_currentTetriminoShow;
+	Tetriminos t_silhouetteTetrimino;
+	Tetriminos t_nextTetrimino;
+	bool t_tetriminoLocked = false;
 
 	// Constants for the matrix
 	const int m_deadZone = 2;
@@ -50,14 +52,31 @@ class MainScene :public BaseScene
 	const float m_timerFastenAmount = 0.2;
 	const int m_gravityAccelerateRequirement = 5;
 	const float m_inputInterval = 0.2;
+	// For scoring
+	const float m_baseScorePerRow = 100;
+	const float m_baseScoreMultiplier = 1;
+	const float m_multipleRowsMultiplier = 0.25;
+	const float m_streakScoreMultiplier = 0.5;
 
 	// Sprites
-	CSprite m_matrixSprite = CSprite(m_spriteSize, m_spriteSize, { 155,155,155 });
-	CSprite m_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
+	CSprite s_matrixSprite = CSprite(m_spriteSize, m_spriteSize, OtherColors::SemiVisible);
+	CSprite s_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
+	const int m_specialKeySpriteSheetHeight = 16;
+	const int m_specialKeySpriteSheetWidth = 32;
+	const int m_specialKeySpriteRows = 1;
+	const int m_specialKeySpriteCols = 2;
+	CSprite s_specialKeySprite = CSprite(m_specialKeySpriteSheetHeight, m_specialKeySpriteSheetWidth,
+		m_specialKeySpriteRows, m_specialKeySpriteCols, (m_specialKeySpriteRows * m_specialKeySpriteCols), 1);
+	const int m_inputKeySpriteSheetHeight = 16;
+	const int m_inputKeySpriteSheetWidth = 80;
+	const int m_inputKeySpriteRows = 1;
+	const int m_inputKeySpriteCols = 5;
+	CSprite s_inputKeySprite = CSprite(m_inputKeySpriteSheetHeight, m_inputKeySpriteSheetWidth,
+		m_inputKeySpriteRows, m_inputKeySpriteCols, (m_inputKeySpriteRows * m_specialKeySpriteCols), 1);
 
 	// Timer
-	Timer m_inputTimer;
-	Timer m_gravityTimer;
+	Timer tm_inputTimer;
+	Timer tm_gravityTimer;
 
 	// Cleared animation
 	int anim_leftStart = (m_matrixCols / 2) - 1;
@@ -103,8 +122,10 @@ public:
 	std::vector<int> CheckRowCompleted();
 	void MatrixClearAnimation();
 	void MatrixClearFinish();
+	void FlushMatrix();
 	void InitiateReplayGame();
 	void ReplayGameFinish();
+	float CalculateScore(int totalRowsCleared);
 
 	// Checks
 	bool PieceCollidedCheck(int xIndex, int yIndex);

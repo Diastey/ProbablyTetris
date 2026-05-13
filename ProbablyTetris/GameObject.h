@@ -21,13 +21,22 @@ using ComponentTuple = std::tuple
 
 class GameObject
 {
-	//size_t m_id = 0;
+	size_t m_id = 0;
 	ComponentTuple m_components;
 	Tag m_tag = Default;
 	bool m_active = true;
 
 public:
-	GameObject() = default;
+	GameObject()
+		:m_id(0)
+	{
+
+	}
+	GameObject(int& id)
+		:m_id(id++)
+	{
+
+	}
 	~GameObject() = default;
 
 	template<typename T, typename... Args>
@@ -72,6 +81,7 @@ public:
 
 	void ReleaseObject()
 	{
-		Get<CSprite>().Release();
+		if (Has<CSprite>())
+			Get<CSprite>().Release();
 	}
 };

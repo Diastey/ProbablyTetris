@@ -50,8 +50,6 @@ public:
 	void RotatePiece(RotateDir rotateDirection);
 	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
-	//void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize, int rowsToIgnore);
-	//void DrawPiece(int matrixStartX, int matrixStartY, int spriteSize);
 	void DrawPiece(int rowsToIgnore);
 	void DrawPiece();
 	void CalculatePiecePosition(int matrixStartX, int matrixStartY, int spriteSize);
