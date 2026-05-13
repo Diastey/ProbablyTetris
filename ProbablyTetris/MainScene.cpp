@@ -450,7 +450,11 @@ bool MainScene::Initialize()
 	}
 
 	// Initialize UI
-
+	UIObject testUiObj = UIObject();
+	testUiObj.Set<CLabel>(CLabel(12, 32, 1, false, "Comic Sans MS", "Next Piece", 15));
+	testUiObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	testUiObj.Get<CTransform>().SetPosition(m_nextTetriminoPositionX + ((int)testUiObj.Get<CLabel>().GetFontWidth() / 2), m_nextTetriminoPositionY - 48);
+	m_screenPanel.AddUIObject(testUiObj);
 
 	// Initialize tetriminos
 	srand(time(0));
@@ -586,6 +590,8 @@ void MainScene::Update(int frames)
 
 void MainScene::Render()
 {
+	m_screenPanel.DrawPanel();
+
 	int rowCount = 0;
 	for (MatrixRow& rows : g_theMatrix)
 	{

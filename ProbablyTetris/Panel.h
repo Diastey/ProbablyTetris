@@ -11,11 +11,27 @@ class Panel :public UIObject
 public:
 	void DrawPanel()
 	{
+		for (UIObject& uiObj : m_uiObj)
+		{
+			if (uiObj.Has<CSprite>())
+			{
+				uiObj.Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), uiObj.Get<CTransform>().GetPosition());
+			}
+			if (uiObj.Has<CLabel>())
+			{
+				uiObj.Get<CLabel>().DrawLabel(DirectXManager::GetInstance()->GetSpriteBrush(),Get<CTransform>().GetPosition(),uiObj.Get<CTransform>());
+			}
+		}
 
+		for (Panel& panel : m_childrenPanel)
+		{
+			panel.DrawPanel();
+		}
 	}
 
-	void AddPanel(const Panel& panel)
+	void AddPanel(Panel& panel)
 	{
+		panel.SetParentPanel(*this);
 		m_childrenPanel.push_back(panel);
 	}
 	void AddUIObject(const UIObject& uiObj)
