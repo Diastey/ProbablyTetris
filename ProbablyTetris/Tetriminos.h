@@ -9,13 +9,13 @@
 #include <iostream>
 
 using TetrminoUnits = GameObject[4];
-enum CurrentDir
-{
-	TOP = 0,
-	RIGHT = 1,
-	BOTTOM = 2,
-	LEFT = 3
-};
+//enum CurrentDir
+//{
+//	TOP = 0,
+//	RIGHT = 1,
+//	BOTTOM = 2,
+//	LEFT = 3
+//};
 enum RotateDir
 {
 	CW = 0,
@@ -27,7 +27,7 @@ class Tetriminos
 	TetrminoUnits m_units;
 	Vec2f m_pivotPoint = { 0,0 };
 	int m_matrixSize = 0;
-	CurrentDir m_currentDir = TOP;
+	//CurrentDir m_currentDir = TOP;
 
 public:
 	Tetriminos() = default;
@@ -47,10 +47,11 @@ public:
 	void CopyPieces(Tetriminos& tetriminoToCopy);
 
 	void MoveLocalPieces(const int newXIndex[4], const int newYindex[4]);
-	void RotatePiece(RotateDir rotateDirection);
+	//void RotatePiece(RotateDir rotateDirection);
 	void ShiftPiece(int moveDirection);
 	void DropPiece(int amount);
 	void DrawPiece(int rowsToIgnore);
 	void DrawPiece();
+	void ReleasePiece();
 	void CalculatePiecePosition(int matrixStartX, int matrixStartY, int spriteSize);
 };

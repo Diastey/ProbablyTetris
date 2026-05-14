@@ -57,46 +57,46 @@ void Tetriminos::MoveLocalPieces(const int newXIndex[4], const int newYindex[4])
 	}
 }
 
-void Tetriminos::RotatePiece(RotateDir rotateDirection)
-{
-	switch (rotateDirection)
-	{
-	case CW:
-		switch (m_currentDir)
-		{
-		case TOP:
-			m_currentDir = RIGHT;
-			break;
-		case RIGHT:
-			m_currentDir = BOTTOM;
-			break;
-		case BOTTOM:
-			m_currentDir = LEFT;
-			break;
-		case LEFT:
-			m_currentDir = TOP;
-			break;
-		}
-		break;
-	case CCW:
-		switch (m_currentDir)
-		{
-		case TOP:
-			m_currentDir = LEFT;
-			break;
-		case LEFT:
-			m_currentDir = BOTTOM;
-			break;
-		case BOTTOM:
-			m_currentDir = RIGHT;
-			break;
-		case RIGHT:
-			m_currentDir = TOP;
-			break;
-		}
-		break;
-	}
-}
+//void Tetriminos::RotatePiece(RotateDir rotateDirection)
+//{
+//	switch (rotateDirection)
+//	{
+//	case CW:
+//		switch (m_currentDir)
+//		{
+//		case TOP:
+//			m_currentDir = RIGHT;
+//			break;
+//		case RIGHT:
+//			m_currentDir = BOTTOM;
+//			break;
+//		case BOTTOM:
+//			m_currentDir = LEFT;
+//			break;
+//		case LEFT:
+//			m_currentDir = TOP;
+//			break;
+//		}
+//		break;
+//	case CCW:
+//		switch (m_currentDir)
+//		{
+//		case TOP:
+//			m_currentDir = LEFT;
+//			break;
+//		case LEFT:
+//			m_currentDir = BOTTOM;
+//			break;
+//		case BOTTOM:
+//			m_currentDir = RIGHT;
+//			break;
+//		case RIGHT:
+//			m_currentDir = TOP;
+//			break;
+//		}
+//		break;
+//	}
+//}
 
 void Tetriminos::ShiftPiece(int moveDirection)
 {
@@ -124,6 +124,14 @@ void Tetriminos::DrawPiece()
 	for (int i = 0;i < 4;i++)
 	{
 		m_units[i].Get<CSprite>().DrawSprite(DirectXManager::GetInstance()->GetSpriteBrush(), m_units[i].Get<CTransform>().GetPosition());
+	}
+}
+
+void Tetriminos::ReleasePiece()
+{
+	for (int i = 0;i < 4;i++)
+	{
+		m_units[i].ReleaseObject();
 	}
 }
 

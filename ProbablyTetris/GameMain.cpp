@@ -8,6 +8,7 @@
 #include "DirectXManager.h"
 #include "InputManager.h"
 #include "SceneStackManager.h"
+#include "AudioManager.h"
 
 #include "MainScene.h"
 
@@ -18,6 +19,7 @@ GameWindowManager* GameWindowManager::instance = nullptr;
 DirectXManager* DirectXManager::instance = nullptr;
 InputManager* InputManager::instance = nullptr;
 SceneStackManager* SceneStackManager::instance = nullptr;
+AudioManager* AudioManager::instance = nullptr;
 
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
@@ -36,6 +38,8 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 		return 0;
 	}
 
+	AudioManager::GetInstance()->InitializeAudio();
+
 	MainScene* mainScene = new MainScene(30);
 	SceneStackManager::GetInstance()->PushScene(mainScene);
 
@@ -44,12 +48,6 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 		if (!SceneStackManager::GetInstance()->IsEmpty())
 		{
 			SceneStackManager::GetInstance()->RunCurrentScene();
-		}
-
-		if (InputManager::GetInstance()->IsKeyPressed(DIK_ESCAPE))
-		{
-			std::cout << "QUIT" << std::endl;
-			PostQuitMessage(0);
 		}
 	}
 
@@ -62,6 +60,7 @@ int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nSho
 	InputManager::DestroyInstance();
 	DirectXManager::DestroyInstance();
 	GameWindowManager::DestroyInstance();
+	AudioManager::DestroyInstance();
 
 	return 0;
 }

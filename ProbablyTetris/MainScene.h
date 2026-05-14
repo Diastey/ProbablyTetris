@@ -5,6 +5,7 @@
 #include "Tetriminos.h"
 #include "GameWindowManager.h"
 #include "Timer.h"
+#include "TextFileIO.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -27,6 +28,10 @@ class MainScene :public BaseScene
 	int g_clearedRows = 0;
 	int g_score = 0;
 	int g_currentStreak = 0;
+	int g_highestScore = 0;
+	std::string g_scoreText = "0";
+	std::string g_streakText = "0";
+	std::string g_highestScoreText = "0";
 
 	// Tetrimino
 	Tetriminos t_currentTetrimino;
@@ -45,7 +50,7 @@ class MainScene :public BaseScene
 	const int m_showCurrentTetriminoPositionX = m_matrixStartX;
 	const int m_showCurrentTetriminoPositionY = m_matrixStartY / 2;
 	const int m_nextTetriminoPositionX = m_matrixStartX + (m_matrixCols * m_spriteSize);
-	const int m_nextTetriminoPositionY = GameWindowManager::GetInstance()->GetWindowHeight() / 2;
+	const int m_nextTetriminoPositionY = (GameWindowManager::GetInstance()->GetWindowHeight() / 4) * 3;
 	// For tiemrs
 	const float m_initialGravityTIme = 2;
 	const float m_minGravityTime = 0.4;
@@ -57,37 +62,45 @@ class MainScene :public BaseScene
 	const float m_baseScoreMultiplier = 1;
 	const float m_multipleRowsMultiplier = 0.25;
 	const float m_streakScoreMultiplier = 0.5;
+	const std::string m_highScoreFileName = "highScore.txt";
 
 	// Sprites
 	CSprite s_matrixSprite = CSprite(m_spriteSize, m_spriteSize, OtherColors::SemiVisible);
 	CSprite s_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
-	const int m_specialKeySpriteSheetHeight = 16;
-	const int m_specialKeySpriteSheetWidth = 32;
-	const int m_specialKeySpriteRows = 1;
-	const int m_specialKeySpriteCols = 2;
-	CSprite s_specialKeySprite = CSprite(m_specialKeySpriteSheetHeight, m_specialKeySpriteSheetWidth,
-		m_specialKeySpriteRows, m_specialKeySpriteCols, (m_specialKeySpriteRows * m_specialKeySpriteCols), 1);
-	const int m_inputKeySpriteSheetHeight = 16;
-	const int m_inputKeySpriteSheetWidth = 80;
+	const int m_controlsUIPositionX = m_matrixStartX / 4;
+	const int m_controlsUIPositionY = (GameWindowManager::GetInstance()->GetWindowHeight()) / 8;
+	const int m_specialKeySpriteSheetHeight = 48;
+	const int m_specialKeySpriteSheetWidth = 96;
+	CSprite s_spaceKeySprite = CSprite(m_specialKeySpriteSheetHeight, m_specialKeySpriteSheetWidth);
+	CSprite s_escKeySprite = CSprite(m_specialKeySpriteSheetHeight, m_specialKeySpriteSheetWidth);
+	const int m_inputKeySpriteSheetHeight = 48;
+	const int m_inputKeySpriteSheetWidth = 240;
 	const int m_inputKeySpriteRows = 1;
 	const int m_inputKeySpriteCols = 5;
 	CSprite s_inputKeySprite = CSprite(m_inputKeySpriteSheetHeight, m_inputKeySpriteSheetWidth,
-		m_inputKeySpriteRows, m_inputKeySpriteCols, (m_inputKeySpriteRows * m_specialKeySpriteCols), 1);
+		m_inputKeySpriteRows, m_inputKeySpriteCols, (m_inputKeySpriteRows * m_inputKeySpriteCols), 0);
 
 	// Timer
 	Timer tm_inputTimer;
 	Timer tm_gravityTimer;
 
-	// Cleared animation
+	// Clear animation
 	int anim_leftStart = (m_matrixCols / 2) - 1;
 	int anim_rightStart = m_matrixCols / 2;
 	int anim_currentLeft = anim_leftStart;
 	int anim_currentRight = anim_rightStart;
 
-	// Testing
-	//int x = 0;
-	//int y = 0;
-	//GameObject testingObj;
+	// Score UI
+	const int ui_scorePanelStartX = m_matrixStartX + (m_spriteSize * m_matrixCols) + (m_matrixStartX / 5);
+	const int ui_scorePanelStartY = GameWindowManager::GetInstance()->GetWindowHeight() / 4;
+
+	// UI Font settings
+	const int defaultFontWidth = 12;
+	const int defaultFontHeight = 32;
+	const int bigFontWidth = 16;
+	const int bigFontHeight = 48;
+	const float bigTextOffset = 1.5;
+
 public:
 	MainScene(int fps)
 		:BaseScene(fps)
@@ -134,6 +147,7 @@ public:
 	bool BottomBoundaryCheck(int yIndex);
 	bool UpperBoundaryCheck(int yIndex);
 
+	void InitializeUI();
 	bool Initialize() override;
 	void Update(int frames) override;
 	void Render() override;
@@ -142,12 +156,5 @@ public:
 	// UI
 	void DrawSilhouette();
 	void DrawCurrentAndNextPiece();
+	void UpdateScoreText();
 };
-
-//m_tetriminos[0].Init(m_pieceSprite, TetriminoShapes::I);
-//m_tetriminos[1].Init(m_pieceSprite, TetriminoShapes::J);
-//m_tetriminos[2].Init(m_pieceSprite, TetriminoShapes::L);
-//m_tetriminos[3].Init(m_pieceSprite, TetriminoShapes::O);
-//m_tetriminos[4].Init(m_pieceSprite, TetriminoShapes::S);
-//m_tetriminos[5].Init(m_pieceSprite, TetriminoShapes::T);
-//m_tetriminos[6].Init(m_pieceSprite, TetriminoShapes::Z);

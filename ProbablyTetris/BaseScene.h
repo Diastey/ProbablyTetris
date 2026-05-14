@@ -7,6 +7,7 @@
 #include "GameWindowManager.h"
 #include "DirectXManager.h"
 #include "InputManager.h"
+#include "AudioManager.h"
 #include "FrameTimer.h"
 
 class BaseScene;

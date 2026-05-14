@@ -7,11 +7,13 @@ SceneUpdateResult BaseScene::Run()
 
 	Update(m_frameTimer->FramesToUpdate());
 
-	DirectXManager::GetInstance()->BeginRender();
-	Render();
-	DirectXManager::GetInstance()->EndRender();
-
-	AudioUpdate();
+	if (m_result.command == None)
+	{
+		DirectXManager::GetInstance()->BeginRender();
+		Render();
+		DirectXManager::GetInstance()->EndRender();
+		AudioUpdate();
+	}
 	return m_result;
 }
 
@@ -22,17 +24,13 @@ void BaseScene::Input()
 
 void BaseScene::AudioUpdate()
 {
-
+	AudioManager::GetInstance()->UpdateSounds();
 }
-
-//void BaseScene::UpdateCursorPosition(int cursorObjectIndex)
-//{
-//
-//}
 
 void BaseScene::ReleaseScene()
 {
 	delete m_frameTimer;
+	m_screenPanel.ReleasePanel();
 
 	Release();
 }

@@ -15,7 +15,7 @@ D3DXVECTOR2 &CTransform::GetScaling()
 	return m_scaling;
 }
 
-void CTransform::SetPosition(D3DXVECTOR2 newPosition)
+void CTransform::SetPosition(const D3DXVECTOR2& newPosition)
 {
 	m_position = newPosition;
 }
@@ -31,4 +31,21 @@ void CTransform::SetPosition(float x, float y)
 {
 	m_position.x = x;
 	m_position.y = y;
+}
+
+void CTransform::SetScaling(const D3DXVECTOR2& newScaling)
+{
+	m_scaling = newScaling;
+}
+
+void CTransform::SetScaling(int x, int y)
+{
+	m_scaling.x = x;
+	m_scaling.y = y;
+}
+
+void CTransform::SetScaling(float x, float y)
+{
+	m_scaling.x = x;
+	m_scaling.y = y;
 }

@@ -1,4 +1,5 @@
 #include "MainScene.h"
+#include "SceneStackManager.h"
 
 void MainScene::Gravity()
 {
@@ -118,8 +119,10 @@ void MainScene::InitiateReplayGame()
 void MainScene::ReplayGameFinish()
 {
 	g_lose = false;
+	g_score = 0;
+	g_currentStreak = 0;
+	UpdateScoreText();
 	FlushMatrix();
-
 	RandSpawnNewPiece();
 }
 
@@ -133,6 +136,7 @@ bool MainScene::RotatePieceAttempt(RotateDir rotateDirection)
 {
 	int finalX[4];
 	int finalY[4];
+	bool needKicking = false;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -160,17 +164,69 @@ bool MainScene::RotatePieceAttempt(RotateDir rotateDirection)
 
 		if (!FullBoundaryCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
 		{
-			std::cout << "Unsafe(Boudary) :" << finalX[i] << " | " << finalY[i] << std::endl;
-			return false;
+			needKicking = true;
 		}
-		if (!PieceCollidedCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+		else
 		{
-			std::cout << "Unsafe(Collided) :" << finalX[i] + t_currentTetrimino.GetPivotPoint().x << " | " << finalY[i] + t_currentTetrimino.GetPivotPoint().y << std::endl;
-			return false;
+			if (!PieceCollidedCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+			{
+				needKicking = true;
+			}
 		}
 	}
 
-	t_currentTetrimino.RotatePiece(rotateDirection);
+	if (needKicking)
+	{
+		needKicking = false;
+		int kickDirection = 1;
+		for (int i = 0;i < 4;i++)
+		{
+			if (!FullBoundaryCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x + kickDirection, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+			{
+				needKicking = true;
+			}
+			else
+			{
+				if (!PieceCollidedCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x + kickDirection, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+				{
+					needKicking = true;
+				}
+			}
+		}
+		if (needKicking)
+		{
+			needKicking = false;
+			kickDirection = -1;
+			for (int i = 0;i < 4;i++)
+			{
+				if (!FullBoundaryCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x + kickDirection, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+				{
+					needKicking = true;
+				}
+				else
+				{
+					if (!PieceCollidedCheck(finalX[i] + t_currentTetrimino.GetPivotPoint().x + kickDirection, finalY[i] + t_currentTetrimino.GetPivotPoint().y))
+					{
+						needKicking = true;
+					}
+				}
+			}
+			if (needKicking)
+			{
+				return false;
+			}
+			else
+			{
+				t_currentTetrimino.ShiftPiece(kickDirection);
+			}
+		}
+		else
+		{
+			t_currentTetrimino.ShiftPiece(kickDirection);
+		}
+	}
+
+	//t_currentTetrimino.RotatePiece(rotateDirection);
 	t_currentTetrimino.MoveLocalPieces(finalX, finalY);
 	RecalculatePiecesLocations();
 	return true;
@@ -185,12 +241,10 @@ bool MainScene::ShiftPieceAttempt(int moveDirection)
 
 		if (!FullBoundaryCheck(newX, unit.GetYIndex(t_currentTetrimino.GetPivotPoint().y)))
 		{
-			//std::cout << "Unsafe(Boudary) :" << newX << " | " << y << std::endl;
 			return false;
 		}
 		if (!PieceCollidedCheck(newX, unit.GetYIndex(t_currentTetrimino.GetPivotPoint().y)))
 		{
-			//std::cout << "Unsafe(Collided) :" << newX << " | " << unit.GetXIndex(currentTetrimino.GetPivotPoint().y) << std::endl;
 			return false;
 		}
 	}
@@ -206,12 +260,10 @@ bool MainScene::PiecesSafeToDrop(int amount)
 
 		if (!FullBoundaryCheck(unit.GetXIndex(t_currentTetrimino.GetPivotPoint().x), newY))
 		{
-			//std::cout << "Unsafe(Boudary) :" << unit.GetXIndex(currentTetrimino.GetPivotPoint().x) << " | " << newY << std::endl;
 			return false;
 		}
 		if (!PieceCollidedCheck(unit.GetXIndex(t_currentTetrimino.GetPivotPoint().x), newY))
 		{
-			//std::cout << "Unsafe(Collided) :" << unit.GetXIndex(currentTetrimino.GetPivotPoint().x) << " | " << newY + currentTetrimino.GetPivotPoint().y << std::endl;
 			return false;
 		}
 	}
@@ -234,6 +286,8 @@ bool MainScene::DropPieceAttempt(int amount)
 void MainScene::DropPieceUntilLocked()
 {
 	t_currentTetrimino.DropPiece(RowsUntiLocked());
+	AudioManager::GetInstance()->PrepareSound1(0);
+	AudioManager::GetInstance()->PlaySound1(0, true);
 	PieceLocked();
 }
 
@@ -259,6 +313,8 @@ void MainScene::PieceLocked()
 		if (!UpperBoundaryCheck(y))
 		{
 			g_lose = true;
+			AudioManager::GetInstance()->PrepareSound1(2);
+			AudioManager::GetInstance()->PlaySound1(2, true);
 		}
 
 		g_theMatrix[y].SetOccupiedAt(x);
@@ -269,15 +325,22 @@ void MainScene::PieceLocked()
 	g_rowsToClear = CheckRowCompleted();
 	if (g_rowsToClear.size() > 0)
 	{
+		AudioManager::GetInstance()->PrepareSound1(1);
+		AudioManager::GetInstance()->PlaySound1(1, true);
 		g_score += CalculateScore(g_rowsToClear.size());
+		if (g_score > g_highestScore)
+		{
+			g_highestScore = g_score;
+		}
+		UpdateScoreText();
 		g_clearedRows += g_rowsToClear.size();
 		t_tetriminoLocked = true;
 		GravityAccelerate(g_clearedRows);
-		std::cout << g_score << std::endl;
 	}
 	else
 	{
 		g_currentStreak = 0;
+		UpdateScoreText();
 		RandSpawnNewPiece();
 	}
 }
@@ -406,6 +469,131 @@ bool MainScene::UpperBoundaryCheck(int yIndex)
 	return true;
 }
 
+void MainScene::InitializeUI()
+{
+	// Initialize UI
+	// Next piece panel
+	Panel nextPiecePanel = Panel();
+	UIObject nextPieceLabelObj = UIObject();
+	nextPieceLabelObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Next Piece"));
+	nextPieceLabelObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	nextPieceLabelObj.Get<CTransform>().SetPosition(m_nextTetriminoPositionX + ((int)nextPieceLabelObj.Get<CLabel>().GetTextWidth() / 2), m_nextTetriminoPositionY - 48);
+	nextPiecePanel.AddUIObject(nextPieceLabelObj);
+	m_screenPanel.AddPanel(nextPiecePanel);
+
+	// ScorePanel
+	int scoreUIPositionX = ui_scorePanelStartX;
+	int scoreUIPositionY = ui_scorePanelStartY;
+	UIObject scoreUIObj = UIObject();
+	Panel scorePanel = Panel();
+	// Highest score UI
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Highest score: "));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	scoreUIPositionY += defaultFontHeight;
+	scoreUIObj.Remove<CLabel>();
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "0"));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CLabel>().SetReference(&g_highestScoreText);
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	scoreUIPositionX = ui_scorePanelStartX;
+	scoreUIPositionY += defaultFontHeight * 2;
+	// Streak UI
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Streak: "));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	scoreUIPositionX += scoreUIObj.Get<CLabel>().GetTextWidth();
+	scoreUIObj.Remove<CLabel>();
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "0"));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CLabel>().SetReference(&g_streakText);
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	scoreUIPositionX = ui_scorePanelStartX;
+	scoreUIPositionY += defaultFontHeight;
+	// Score IU
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Score: "));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	scoreUIPositionX += scoreUIObj.Get<CLabel>().GetTextWidth();
+	scoreUIObj.Remove<CLabel>();
+	scoreUIObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "0"));
+	scoreUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	scoreUIObj.Get<CLabel>().SetReference(&g_scoreText);
+	scoreUIObj.Get<CTransform>().SetPosition(scoreUIPositionX, scoreUIPositionY);
+	scorePanel.AddUIObject(scoreUIObj);
+	m_screenPanel.AddPanel(scorePanel);
+
+	// Control panel
+	Panel controlPanel = Panel();
+	int uiSpritePositionX = m_controlsUIPositionX;
+	int uiSpritePositionY = m_controlsUIPositionY;
+	UIObject controlUIObj = UIObject();
+	// Space key
+	controlUIObj.Set<CSprite>(s_spaceKeySprite);
+	controlUIObj.Set<CLabel>(CLabel(bigFontWidth, bigFontHeight, 1, false, "Comic Sans MS", "DROP", bigTextOffset));
+	controlUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	controlUIObj.Get<CLabel>().SetOffset(m_specialKeySpriteSheetWidth + defaultFontHeight, 0);
+	controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX - defaultFontWidth * 3, uiSpritePositionY);
+	controlPanel.AddUIObject(controlUIObj);
+	controlUIObj.Remove<CLabel>();
+	controlUIObj.Remove<CSprite>();
+	uiSpritePositionY += m_specialKeySpriteSheetHeight + defaultFontWidth;
+	// ESC key
+	controlUIObj.Set<CSprite>(s_escKeySprite);
+	controlUIObj.Set<CLabel>(CLabel(bigFontWidth, bigFontHeight, 1, false, "Comic Sans MS", "EXIT", bigTextOffset));
+	controlUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	controlUIObj.Get<CLabel>().SetOffset(m_specialKeySpriteSheetWidth + defaultFontHeight, 0);
+	controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX - defaultFontWidth * 3, uiSpritePositionY);
+	controlPanel.AddUIObject(controlUIObj);
+	controlUIObj.Remove<CLabel>();
+	controlUIObj.Remove<CSprite>();
+	uiSpritePositionY += m_specialKeySpriteSheetHeight + defaultFontHeight;
+	// ASD key
+	controlUIObj.Set<CSprite>(s_inputKeySprite);
+	for (int i = 0;i < 3;i++)
+	{
+		controlUIObj.Get<CSprite>().SetFrameToDraw(i);
+		controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX, uiSpritePositionY);
+		controlPanel.AddUIObject(controlUIObj);
+		uiSpritePositionX += controlUIObj.Get<CSprite>().SpriteWidth();
+	}
+	uiSpritePositionX = m_controlsUIPositionX;
+	uiSpritePositionY += m_inputKeySpriteSheetHeight;
+	controlUIObj.Remove<CSprite>();
+
+	controlUIObj.Set<CLabel>(CLabel(bigFontWidth, bigFontHeight, 1, false, "Comic Sans MS", "TO MOVE", bigTextOffset));
+	controlUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX, uiSpritePositionY);
+	controlPanel.AddUIObject(controlUIObj);
+	uiSpritePositionY += m_inputKeySpriteSheetHeight * 2;
+	controlUIObj.Remove<CLabel>();
+	// QE key
+	uiSpritePositionX += defaultFontWidth * 2;
+	controlUIObj.Set<CSprite>(s_inputKeySprite);
+	for (int i = 0;i < 2;i++)
+	{
+		controlUIObj.Get<CSprite>().SetFrameToDraw(3 + i);
+		controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX, uiSpritePositionY);
+		controlPanel.AddUIObject(controlUIObj);
+		uiSpritePositionX += controlUIObj.Get<CSprite>().SpriteWidth();
+	}
+	uiSpritePositionX = m_controlsUIPositionX;
+	uiSpritePositionY += m_inputKeySpriteSheetHeight;
+	controlUIObj.Remove<CSprite>();
+
+	controlUIObj.Set<CLabel>(CLabel(bigFontWidth, bigFontHeight, 1, false, "Comic Sans MS", "TO ROTATE", bigTextOffset));
+	controlUIObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	controlUIObj.Get<CTransform>().SetPosition(uiSpritePositionX, uiSpritePositionY);
+	controlPanel.AddUIObject(controlUIObj);
+	m_screenPanel.AddPanel(controlPanel);
+	controlUIObj.Remove<CLabel>();
+}
+
 bool MainScene::Initialize()
 {
 	if (!s_matrixSprite.InitializeSprite(DirectXManager::GetInstance()->GetD3dDevice(), "Assets/Matrix.png"))
@@ -423,10 +611,19 @@ bool MainScene::Initialize()
 		return false;
 	}
 
-	if (!s_specialKeySprite.InitializeSprite(DirectXManager::GetInstance()->GetD3dDevice(), "Assets/SpecialKeys.png"))
+	if (!s_spaceKeySprite.InitializeSprite(DirectXManager::GetInstance()->GetD3dDevice(), "Assets/SpaceKey.png"))
 	{
 		return false;
 	}
+
+	if (!s_escKeySprite.InitializeSprite(DirectXManager::GetInstance()->GetD3dDevice(), "Assets/ESCKey.png"))
+	{
+		return false;
+	}
+
+	AudioManager::GetInstance()->LoadSounds("Assets/Sound/DropSound.mp3");
+	AudioManager::GetInstance()->LoadSounds("Assets/Sound/ClearRowSound.mp3");
+	AudioManager::GetInstance()->LoadSounds("Assets/Sound/LoseSound.mp3");
 
 	// Initialize the matrix
 	D3DXVECTOR2 matrixStartPos = D3DXVECTOR2(m_matrixStartX, m_matrixStartY);
@@ -449,12 +646,21 @@ bool MainScene::Initialize()
 		matrixStartPos.y += m_spriteSize;
 	}
 
-	// Initialize UI
-	UIObject testUiObj = UIObject();
-	testUiObj.Set<CLabel>(CLabel(12, 32, 1, false, "Comic Sans MS", "Next Piece", 15));
-	testUiObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
-	testUiObj.Get<CTransform>().SetPosition(m_nextTetriminoPositionX + ((int)testUiObj.Get<CLabel>().GetFontWidth() / 2), m_nextTetriminoPositionY - 48);
-	m_screenPanel.AddUIObject(testUiObj);
+	if (TextFileIO::FileExists(m_highScoreFileName))
+	{
+		std::string text = TextFileIO::ReadFromTextFile(m_highScoreFileName);
+
+		if (!text.empty())
+		{
+			g_highestScore = std::stoi(text);
+		}
+	}
+	else
+	{
+		TextFileIO::WriteToTextFile(m_highScoreFileName, std::to_string(g_highestScore));
+	}
+	InitializeUI();
+	UpdateScoreText();
 
 	// Initialize tetriminos
 	srand(time(0));
@@ -476,6 +682,13 @@ bool MainScene::Initialize()
 
 void MainScene::Update(int frames)
 {
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_ESCAPE))
+	{
+		m_result.command = Quit;
+		TextFileIO::WriteToTextFile(m_highScoreFileName, std::to_string(g_highestScore));
+		SceneStackManager::GetInstance()->PopScene();
+	}
+
 	for (int i = 0;i < frames;i++)
 	{
 		if (g_lose && !t_tetriminoLocked)
@@ -628,10 +841,30 @@ void MainScene::DrawCurrentAndNextPiece()
 	t_nextTetrimino.DrawPiece();
 }
 
+void MainScene::UpdateScoreText()
+{
+	g_scoreText = std::to_string(g_score);
+	g_streakText = std::to_string(g_currentStreak);
+	g_highestScoreText = std::to_string(g_highestScore);
+}
+
 void MainScene::Release()
 {
 	for (MatrixRow& rows : g_theMatrix)
 	{
 		rows.ReleaseMatrix();
 	}
+	g_rowsToClear.clear();
+	t_currentTetrimino.ReleasePiece();
+	t_currentTetriminoShow.ReleasePiece();
+	t_silhouetteTetrimino.ReleasePiece();
+	t_nextTetrimino.ReleasePiece();
+
+	s_matrixSprite.Release();
+	s_pieceSprite.Release();
+	s_spaceKeySprite.Release();
+	s_escKeySprite.Release();
+	s_inputKeySprite.Release();
+
+	AudioManager::GetInstance()->ClearAudio();
 }

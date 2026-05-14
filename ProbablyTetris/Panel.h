@@ -19,7 +19,27 @@ public:
 			}
 			if (uiObj.Has<CLabel>())
 			{
-				uiObj.Get<CLabel>().DrawLabel(DirectXManager::GetInstance()->GetSpriteBrush(),Get<CTransform>().GetPosition(),uiObj.Get<CTransform>());
+				uiObj.Get<CLabel>().DrawLabel(DirectXManager::GetInstance()->GetSpriteBrush(), Get<CTransform>().GetPosition(), uiObj.Get<CTransform>());
+			}
+		}
+
+		for (Panel& panel : m_childrenPanel)
+		{
+			panel.DrawPanel();
+		}
+	}
+
+	void DrawPanel(int spriteFrame)
+	{
+		for (UIObject& uiObj : m_uiObj)
+		{
+			if (uiObj.Has<CSprite>())
+			{
+				uiObj.Get<CSprite>().DrawSprite(spriteFrame, DirectXManager::GetInstance()->GetSpriteBrush(), uiObj.Get<CTransform>().GetPosition());
+			}
+			if (uiObj.Has<CLabel>())
+			{
+				uiObj.Get<CLabel>().DrawLabel(DirectXManager::GetInstance()->GetSpriteBrush(), Get<CTransform>().GetPosition(), uiObj.Get<CTransform>());
 			}
 		}
 

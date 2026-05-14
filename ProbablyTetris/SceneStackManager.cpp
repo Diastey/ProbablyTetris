@@ -47,6 +47,7 @@ void SceneStackManager::CloseGame()
 		sceneStack.top()->Release();
 		sceneStack.pop();
 	}
+	PostQuitMessage(0);
 }
 bool SceneStackManager::IsEmpty()
 {
