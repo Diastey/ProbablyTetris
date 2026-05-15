@@ -68,7 +68,7 @@ class MainScene :public BaseScene
 	CSprite s_matrixSprite = CSprite(m_spriteSize, m_spriteSize, OtherColors::SemiVisible);
 	CSprite s_pieceSprite = CSprite(m_spriteSize, m_spriteSize);
 	const int m_controlsUIPositionX = m_matrixStartX / 4;
-	const int m_controlsUIPositionY = (GameWindowManager::GetInstance()->GetWindowHeight()) / 8;
+	const int m_controlsUIPositionY = (GameWindowManager::GetInstance()->GetWindowHeight()) / 4;
 	const int m_specialKeySpriteSheetHeight = 48;
 	const int m_specialKeySpriteSheetWidth = 96;
 	CSprite s_spaceKeySprite = CSprite(m_specialKeySpriteSheetHeight, m_specialKeySpriteSheetWidth);

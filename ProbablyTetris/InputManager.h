@@ -30,8 +30,8 @@ public:
 	void GetInput();
 	void ReleaseInputDevice();
 	bool HasAnyKeyInput();
-	bool IsKeyPressed(int key);
 	bool IsKeyDown(int key);
+	bool IsKeyPressed(int key);
 	bool IsKeyUp(int key);
 	static void DestroyInstance()
 	{

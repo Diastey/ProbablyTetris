@@ -29,15 +29,15 @@ bool MainScene::InputTimer()
 
 DelayInputTypes MainScene::GetCurrentMovementInput()
 {
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_A))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_A) || InputManager::GetInstance()->IsKeyDown(DIK_LEFTARROW))
 	{
 		return Left;
 	}
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_D))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_D) || InputManager::GetInstance()->IsKeyDown(DIK_RIGHTARROW))
 	{
 		return Right;
 	}
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_S))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_S) || InputManager::GetInstance()->IsKeyDown(DIK_DOWNARROW))
 	{
 		return Down;
 	}
@@ -477,9 +477,18 @@ void MainScene::InitializeUI()
 	UIObject nextPieceLabelObj = UIObject();
 	nextPieceLabelObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Next Piece"));
 	nextPieceLabelObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
-	nextPieceLabelObj.Get<CTransform>().SetPosition(m_nextTetriminoPositionX + ((int)nextPieceLabelObj.Get<CLabel>().GetTextWidth() / 2), m_nextTetriminoPositionY - 48);
+	nextPieceLabelObj.Get<CTransform>().SetPosition(m_nextTetriminoPositionX + ((int)nextPieceLabelObj.Get<CLabel>().GetTextWidth() / 2), m_nextTetriminoPositionY - bigFontHeight);
 	nextPiecePanel.AddUIObject(nextPieceLabelObj);
 	m_screenPanel.AddPanel(nextPiecePanel);
+
+	// Current piece panel
+	Panel currentPiecePanel = Panel();
+	UIObject currentPieceLabelObj = UIObject();
+	currentPieceLabelObj.Set<CLabel>(CLabel(defaultFontWidth, defaultFontHeight, 1, false, "Comic Sans MS", "Current Piece"));
+	currentPieceLabelObj.Get<CLabel>().InitializeLabel(DirectXManager::GetInstance()->GetD3dDevice());
+	currentPieceLabelObj.Get<CTransform>().SetPosition(m_showCurrentTetriminoPositionX - ((int)currentPieceLabelObj.Get<CLabel>().GetTextWidth() / 4), m_showCurrentTetriminoPositionY);
+	currentPiecePanel.AddUIObject(currentPieceLabelObj);
+	m_screenPanel.AddPanel(currentPiecePanel);
 
 	// ScorePanel
 	int scoreUIPositionX = ui_scorePanelStartX;
@@ -682,7 +691,7 @@ bool MainScene::Initialize()
 
 void MainScene::Update(int frames)
 {
-	if (InputManager::GetInstance()->IsKeyPressed(DIK_ESCAPE))
+	if (InputManager::GetInstance()->IsKeyDown(DIK_ESCAPE))
 	{
 		m_result.command = Quit;
 		TextFileIO::WriteToTextFile(m_highScoreFileName, std::to_string(g_highestScore));
@@ -712,47 +721,47 @@ void MainScene::Update(int frames)
 	Gravity();
 
 	// Shape testings
-	if (InputManager::GetInstance()->IsKeyDown(DIK_1))
-	{
-		SpawnNewPiece(0);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_2))
-	{
-		SpawnNewPiece(1);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_3))
-	{
-		SpawnNewPiece(2);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_4))
-	{
-		SpawnNewPiece(3);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_5))
-	{
-		SpawnNewPiece(4);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_6))
-	{
-		SpawnNewPiece(5);
-	}
-	if (InputManager::GetInstance()->IsKeyDown(DIK_7))
-	{
-		SpawnNewPiece(6);
-	}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_1))
+	//{
+	//	SpawnNewPiece(0);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_2))
+	//{
+	//	SpawnNewPiece(1);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_3))
+	//{
+	//	SpawnNewPiece(2);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_4))
+	//{
+	//	SpawnNewPiece(3);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_5))
+	//{
+	//	SpawnNewPiece(4);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_6))
+	//{
+	//	SpawnNewPiece(5);
+	//}
+	//if (InputManager::GetInstance()->IsKeyDown(DIK_7))
+	//{
+	//	SpawnNewPiece(6);
+	//}
 
 	// Rotate counter clock-wise
-	if (InputManager::GetInstance()->IsKeyDown(DIK_Q))
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_Q))
 	{
 		RotatePieceAttempt(CCW);
 	}
 	// Rotate clock-wise
-	if (InputManager::GetInstance()->IsKeyDown(DIK_E))
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_E) || InputManager::GetInstance()->IsKeyPressed(DIK_UPARROW))
 	{
 		RotatePieceAttempt(CW);
 	}
 	// Drop
-	if (InputManager::GetInstance()->IsKeyDown(DIK_SPACE))
+	if (InputManager::GetInstance()->IsKeyPressed(DIK_SPACE))
 	{
 		DropPieceUntilLocked();
 	}

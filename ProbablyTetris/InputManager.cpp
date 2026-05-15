@@ -62,12 +62,12 @@ void InputManager::GetInput()
 	m_dInputKeyboardDevice->GetDeviceState(256, m_currentKeyFlags);
 }
 
-bool InputManager::IsKeyPressed(int key)
+bool InputManager::IsKeyDown(int key)
 {
 	return (m_currentKeyFlags[key] & 0x80);
 }
 
-bool InputManager::IsKeyDown(int key)
+bool InputManager::IsKeyPressed(int key)
 {
 	return (m_currentKeyFlags[key] & 0x80) && !(m_previousKeyFlags[key] & 0x80);
 }
