@@ -21,8 +21,8 @@ InputManager* InputManager::instance = nullptr;
 SceneStackManager* SceneStackManager::instance = nullptr;
 AudioManager* AudioManager::instance = nullptr;
 
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
-int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+//int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	GameWindowManager::GetInstance()->InitializeWindow(hInstance, 1024, 800, "ProbablyTetris");
 
