@@ -3,6 +3,7 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "fmod_vc.lib")
 
 #include "GameWindowManager.h"
 #include "DirectXManager.h"

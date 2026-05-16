@@ -25,7 +25,11 @@ The following dependencies are required to build the project:
    - dxguid.lib
    - dinput8.lib
 
-2. Required DLLs:
+2. FMOD Studio
+   Required libraries:
+   - fmod_vc.lib
+
+3. Required DLLs:
    - fmod.dll
    - D3DX9_43.dll
 
@@ -41,6 +45,7 @@ VC++ Include Directories:
 
 VC++ Library Directories:
 - $(ProjectDir)External\DirectX\lib\x86
+- $(ProjectDir)External\FMOD\lib\x86
 - $(LibraryPath)
 
 Character Set:
@@ -54,17 +59,19 @@ Linker Dependencies:
 - d3d9.lib
 - dxguid.lib
 - dinput8.lib
+- fmod_vc.lib
 
 Build Instructions
 ------------------
 1. Open Project.sln in Visual Studio.
 2. Verify include and library directories are correctly configured.
 3. Verify character set and linker settings are correctly configured.
-4. Build the solution in the Release configuration in x86 bit.
+4. Verify all required DLLs are located in the source file
+5. Build the solution in the Release configuration mode in x86 platform.
 
 Running the Program
 -------------------
-If using a compiled executable, ensure the required FMOD runtime DLL is located in the same directory as the executable.
+If using a compiled executable, ensure the required runtime DLLs are located in the same directory as the executable.
 
 Notes
 -----
