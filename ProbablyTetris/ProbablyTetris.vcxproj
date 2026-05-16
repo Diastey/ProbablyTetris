@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)External\FMOD\inc;$(ProjectDir)External\DirectX\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)External\FMOD\lib\x86;$(ProjectDir)External\DirectX\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)External\DirectX\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)External\FMOD\inc;$(ProjectDir)External\DirectX\inc;$(IncludePath)</IncludePath>

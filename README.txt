@@ -29,6 +29,13 @@ The following dependencies are required to build the project:
    Required library:
    - fmod_vc.lib
 
+3. Required DLLs:
+   - fmod.dll
+   - D3DX9_43.dll
+
+Runnable Build and Source Code link:
+https://github.com/Diastey/ProbablyTetris/releases
+
 Project Configuration
 ---------------------
 VC++ Include Directories:
