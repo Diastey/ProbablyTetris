@@ -25,11 +25,7 @@ The following dependencies are required to build the project:
    - dxguid.lib
    - dinput8.lib
 
-2. FMOD Studio API (Windows)
-   Required library:
-   - fmod_vc.lib
-
-3. Required DLLs:
+2. Required DLLs:
    - fmod.dll
    - D3DX9_43.dll
 
@@ -44,7 +40,6 @@ VC++ Include Directories:
 - $(IncludePath)
 
 VC++ Library Directories:
-- $(ProjectDir)External\FMOD\lib\x86
 - $(ProjectDir)External\DirectX\lib\x86
 - $(LibraryPath)
 
@@ -59,7 +54,6 @@ Linker Dependencies:
 - d3d9.lib
 - dxguid.lib
 - dinput8.lib
-- fmod_vc.lib
 
 Build Instructions
 ------------------
