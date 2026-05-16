@@ -71,7 +71,7 @@ Build Instructions
 
 Running the Program
 -------------------
-If using a compiled executable, ensure the required runtime DLLs are located in the same directory as the executable.
+If using a compiled executable, ensure the required runtime DLLs and assets are located in the same directory as the executable.
 
 Notes
 -----
